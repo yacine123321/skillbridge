@@ -8,7 +8,7 @@
 
 const API_BASE = window.location.hostname === 'localhost'
   ? 'http://localhost:8000/api'
-  : '/api';  // same origin in production
+  : 'skillbridge-production-bb6e.up.railway.app';  // same origin in production
 
 // ─────────────────────────────────────────────
 // CORE HTTP CLIENT
