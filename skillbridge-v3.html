@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SkillBridge — Knowledge Exchange Platform</title>
+<script src="api.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=Sora:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090D;--bg2:#0D0F15;--bg3:#131720;--bg4:#191E2A;--bg5:#202636;
+  --border:rgba(255,255,255,0.055);--b2:rgba(255,255,255,0.1);--b3:rgba(255,255,255,0.16);
+  --text:#EAE6DC;--t2:#8C8880;--t3:#4C4A46;
+  --terra:#C4512A;--terra2:#E06A3E;--terbg:rgba(196,81,42,.12);--terbd:rgba(196,81,42,.22);
+  --gold:#C8941A;--gold2:#E0A820;--goldbg:rgba(200,148,26,.1);--goldbd:rgba(200,148,26,.22);
+  --green:#1A8A50;--green2:#22A862;--grnbg:rgba(26,138,80,.1);--grnbd:rgba(26,138,80,.22);
+  --blue:#2A62C0;--bluebg:rgba(42,98,192,.1);--bluebd:rgba(42,98,192,.22);
+  --purple:#6A40C0;--purple2:#8B5CF6;--purpbg:rgba(106,64,192,.1);--purpbd:rgba(106,64,192,.22);
+  --red:#B83030;--redbg:rgba(184,48,48,.1);--redbd:rgba(184,48,48,.22);
+  --r:10px;--rl:16px;--rxl:22px;--rpill:100px;
+  --sb:230px;--ease:cubic-bezier(.4,0,.2,1);
+  --cr-col:#E0A820;
+  --shadow:0 20px 60px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.6}
+#app{display:flex;height:100vh;overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sb{width:var(--sb);min-width:var(--sb);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;z-index:50}
+.sb-logo{padding:16px 14px 12px;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;letter-spacing:-.3px}
+.sb-logo em{color:var(--terra);font-style:normal}
+.sb-logo-v{background:var(--terbg);color:var(--terra);font-family:'Sora',sans-serif;font-size:8px;font-weight:700;letter-spacing:.1em;padding:2px 5px;border-radius:4px}
+.sb-wal{margin:8px;padding:10px 12px;background:var(--bg3);border:1px solid var(--goldbd);border-radius:var(--rl);cursor:pointer;transition:all .2s}
+.sb-wal:hover{background:var(--bg4)}
+.sb-wal-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--t3)}
+.sb-wal-val{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;color:var(--cr-col);line-height:1.1}
+.sb-wal-usd{font-size:9px;color:var(--t3)}
+.sb-wal-bar{height:3px;background:var(--bg5);border-radius:2px;margin-top:7px;overflow:hidden}
+.sb-wal-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--terra));border-radius:2px;transition:width .6s}
+.sb-streak{margin:0 8px 4px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;gap:8px}
+.sf{font-size:16px;animation:flicker 1.8s ease-in-out infinite}
+@keyframes flicker{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.8;transform:scale(.95)}}
+.streak-n{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--terra)}
+.sb-sec{padding:14px 10px 5px;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--t3)}
+.si{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:var(--r);margin:1px 5px;cursor:pointer;transition:all .15s;font-size:12px;color:var(--t2);border:1px solid transparent}
+.si:hover{background:var(--bg3);color:var(--text)}
+.si.act{background:var(--terbg);color:var(--terra);border-color:var(--terbd);font-weight:500}
+.si .ico{width:15px;text-align:center;font-size:12px;flex-shrink:0}
+.si .sb-badge{margin-left:auto;background:var(--terra);color:#fff;border-radius:8px;padding:1px 5px;font-size:8px;font-weight:700}
+.si .sb-badge-g{margin-left:auto;background:var(--goldbg);color:var(--gold);border:1px solid var(--goldbd);border-radius:8px;padding:1px 5px;font-size:8px;font-weight:700}
+.sb-spacer{flex:1}
+.sb-user{margin:6px 8px 8px;padding:9px 11px;background:var(--bg3);border-radius:var(--r);display:flex;align-items:center;gap:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.sb-user:hover{background:var(--bg4)}
+.sb-uav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:var(--terbg);color:var(--terra);flex-shrink:0}
+.sb-uname{font-size:11px;font-weight:500}
+.sb-ulvl{font-size:9px;color:var(--gold)}
+
+/* ── MAIN ── */
+#main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+#topbar{height:52px;min-height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px}
+.srch{flex:1;max-width:380px;position:relative}
+.srch input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:6px 10px 6px 29px;font-size:11px;color:var(--text);font-family:'Sora',sans-serif;outline:none;transition:border-color .2s}
+.srch input:focus{border-color:var(--terra)}
+.srch input::placeholder{color:var(--t3)}
+.srch-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:11px;pointer-events:none}
+.sdrop{position:absolute;top:calc(100%+5px);left:0;right:0;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rl);padding:5px;z-index:200;display:none;max-height:280px;overflow-y:auto}
+.sdrop.open{display:block}
+.sdr-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--r);cursor:pointer;transition:background .15s}
+.sdr-item:hover{background:var(--bg4)}
+.tbr{display:flex;align-items:center;gap:6px;margin-left:auto}
+.tb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:5px 10px;font-size:11px;color:var(--t2);cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s;display:flex;align-items:center;gap:4px}
+.tb:hover{background:var(--bg4);color:var(--text)}
+.tb.pri{background:var(--terra);color:#fff;border-color:var(--terra)}
+.tb.pri:hover{background:var(--terra2)}
+.ndot-wrap{position:relative}
+.ndot{position:absolute;top:-2px;right:-2px;width:6px;height:6px;background:var(--terra);border-radius:50%;border:2px solid var(--bg2)}
+
+/* ── CONTENT ── */
+#content{flex:1;overflow-y:auto;background:var(--bg)}
+.page{display:none;padding:22px 26px;animation:fuA .22s var(--ease)}
+.page.act{display:block}
+@keyframes fuA{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TYPOGRAPHY ── */
+.ph{margin-bottom:20px}
+.ph h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;letter-spacing:-.4px;line-height:1.15}
+.ph p{font-size:11px;color:var(--t2);margin-top:4px}
+.sec-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin-bottom:9px}
+
+/* ── GRID ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px}
+
+/* ── BUTTONS ── */
+.btn{border:none;border-radius:var(--r);padding:7px 14px;font-size:11px;font-weight:500;font-family:'Sora',sans-serif;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.btn-pri{background:var(--terra);color:#fff}.btn-pri:hover{background:var(--terra2);transform:translateY(-1px)}
+.btn-gold{background:var(--goldbg);color:var(--gold);border:1px solid var(--goldbd)}.btn-gold:hover{background:rgba(200,148,26,.18)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--border)}.btn-ghost:hover{color:var(--text);background:var(--bg3)}
+.btn-green{background:var(--grnbg);color:var(--green2);border:1px solid var(--grnbd)}.btn-green:hover{background:rgba(26,138,80,.18)}
+.btn-red{background:var(--redbg);color:var(--red);border:1px solid var(--redbd)}
+.btn-full{width:100%;justify-content:center}
+.btn-lg{padding:10px 20px;font-size:12px}
+
+/* ── TAGS ── */
+.tag{display:inline-block;padding:2px 7px;border-radius:var(--rpill);font-size:9px;font-weight:600}
+.tag-teach{background:var(--grnbg);color:var(--green2)}
+.tag-learn{background:var(--terbg);color:var(--terra2)}
+.tag-gold{background:var(--goldbg);color:var(--gold)}
+.tag-blue{background:var(--bluebg);color:var(--blue)}
+.tag-purple{background:var(--purpbg);color:var(--purple2)}
+.tag-red{background:var(--redbg);color:var(--red)}
+.tag-esc{background:rgba(200,148,26,.2);color:var(--gold2);border:1px solid var(--goldbd)}
+.tag-rare{background:var(--purpbg);color:var(--purple2);border:1px solid var(--purpbd)}
+.tag-legendary{background:linear-gradient(135deg,var(--goldbg),var(--purpbg));color:var(--gold2);border:1px solid var(--goldbd)}
+
+/* ── COMMON ── */
+.ava{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;flex-shrink:0}
+.ava-lg{width:42px;height:42px;font-size:13px}
+.ava-md{width:32px;height:32px;font-size:11px}
+.ava-sm{width:24px;height:24px;font-size:9px}
+.divider{height:1px;background:var(--border);margin:12px 0}
+.mono{font-family:'DM Mono',monospace}
+.flex{display:flex;align-items:center}
+.fg{display:flex;align-items:center;gap:10px}
+.fb{display:flex;align-items:center;justify-content:space-between}
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:none}
+.pbar{background:var(--bg5);border-radius:3px;height:3px;overflow:hidden}
+.pbar-f{height:100%;border-radius:3px;transition:width .7s var(--ease)}
+.cr-val{font-family:'DM Mono',monospace;font-weight:500;color:var(--cr-col)}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px 16px}
+.stat-ico{width:30px;height:30px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:9px}
+.stat-v{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;line-height:1}
+.stat-l{font-size:10px;color:var(--t2);margin-top:3px}
+.stat-s{font-size:9px;margin-top:3px}
+.up{color:var(--green2)}.dn{color:var(--red)}.neu{color:var(--t3)}
+.empty{text-align:center;padding:40px 16px;color:var(--t3)}
+.empty-ico{font-size:36px;margin-bottom:10px;opacity:.4}
+.badge-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── LISTING CARD ── */
+.lcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px;cursor:pointer;transition:all .2s;position:relative}
+.lcard:hover{border-color:var(--terbd);transform:translateY(-2px)}
+.lcard.featured{border-color:var(--goldbd);background:linear-gradient(135deg,var(--bg2),rgba(200,148,26,.03))}
+.feat-badge{position:absolute;top:-1px;right:14px;background:var(--gold);color:#000;font-size:8px;font-weight:700;padding:2px 8px;border-radius:0 0 7px 7px}
+.lcard-instr{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.lcard-title{font-size:13px;font-weight:600;margin-bottom:3px;line-height:1.3}
+.lcard-sub{font-size:11px;color:var(--t2);margin-bottom:9px;line-height:1.5}
+.lcard-meta{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.lcard-foot{display:flex;align-items:center;justify-content:space-between;padding-top:9px;border-top:1px solid var(--border)}
+.lcard-price{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--cr-col)}
+.lcard-usd{font-size:9px;color:var(--t3);margin-top:1px}
+
+/* ── ESCROW ── */
+.escrow-card{background:var(--goldbg);border:1px solid var(--goldbd);border-radius:var(--rl);padding:14px}
+.escrow-steps{display:flex;align-items:center;gap:6px;margin:10px 0}
+.esc-step{flex:1;height:4px;border-radius:2px;background:var(--bg5)}
+.esc-step.done{background:var(--green)}
+.esc-step.active{background:var(--gold)}
+
+/* ── TRUST ── */
+.trust-ring{width:60px;height:60px;position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trust-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.trust-ring .trv{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--text);position:relative;z-index:1}
+.id-verify-row{display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-bottom:7px}
+.verify-ico{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+
+/* ── DISPUTE ── */
+.dispute-card{background:var(--redbg);border:1px solid var(--redbd);border-radius:var(--rl);padding:14px;margin-bottom:10px}
+.evid-drop{border:2px dashed var(--b2);border-radius:var(--r);padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3)}
+.evid-drop:hover{border-color:var(--terra)}
+
+/* ── AFFILIATE ── */
+.aff-tier{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:14px;margin-bottom:8px}
+.aff-tier.active-tier{border-color:var(--goldbd);background:var(--goldbg)}
+
+/* ── INVENTORY ── */
+.inv-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:14px;position:relative;overflow:hidden;transition:all .2s}
+.inv-card:hover{transform:translateY(-2px);border-color:var(--b2)}
+.inv-card.used{opacity:.4;filter:grayscale(1)}
+.inv-card.common::before{content:'';position:absolute;inset:0;background:transparent}
+.inv-card.rare::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent)}
+.inv-card.epic::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple2),transparent)}
+.inv-card.legendary::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold2),transparent)}
+.rarity-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.rarity-lbl.common{color:var(--t3)}.rarity-lbl.rare{color:var(--blue)}.rarity-lbl.epic{color:var(--purple2)}.rarity-lbl.legendary{color:var(--gold)}
+
+/* ── TUTORIAL ── */
+.tut-step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+.tut-step:last-child{border-bottom:none}
+.tut-num{width:32px;height:32px;border-radius:50%;background:var(--terbg);border:1px solid var(--terbd);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--terra);flex-shrink:0;margin-top:2px}
+
+/* ── ARCHITECTURE ── */
+.arch-layer{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:14px;margin-bottom:10px}
+.arch-layer-title{font-size:12px;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rxl);padding:24px;max-width:500px;width:92%;max-height:90vh;overflow-y:auto}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--t2);margin-bottom:20px}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:9px;color:var(--t3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select,.field textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px 11px;font-size:12px;color:var(--text);font-family:'Sora',sans-serif;outline:none;transition:border-color .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--terra)}
+.field select option{background:var(--bg2)}
+.field textarea{resize:vertical;min-height:70px}
+
+/* ── LANDING ── */
+#landing{position:fixed;inset:0;z-index:400;background:radial-gradient(ellipse at 25% 25%,rgba(196,81,42,.07) 0%,transparent 50%),radial-gradient(ellipse at 75% 75%,rgba(200,148,26,.05) 0%,transparent 50%),var(--bg);display:flex;align-items:center;justify-content:center}
+.land-card{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rxl);padding:32px;width:100%;max-width:410px}
+.land-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:5px}
+.land-logo em{color:var(--terra);font-style:normal}
+.land-tabs{display:flex;background:var(--bg3);border-radius:var(--r);padding:3px;margin-bottom:18px}
+.ltab{flex:1;text-align:center;padding:6px;border-radius:8px;cursor:pointer;font-size:11px;color:var(--t2);transition:all .15s}
+.ltab.act{background:var(--bg2);color:var(--text);font-weight:500}
+.step-dots{display:flex;gap:4px;justify-content:center;margin-bottom:16px}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .2s}
+.sdot.on{background:var(--terra)}
+.onb{display:none}.onb.act{display:block}
+.chip-g{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.chip{padding:4px 9px;border-radius:var(--rpill);font-size:10px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--t2);font-family:'Sora',sans-serif;transition:all .15s}
+.chip:hover{border-color:var(--b2);color:var(--text)}
+.chip.on{background:var(--terra);border-color:var(--terra);color:#fff}
+.or-line{display:flex;align-items:center;gap:8px;margin:10px 0;font-size:10px;color:var(--t3)}
+.or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--border)}
+.soc-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:8px;font-size:11px;color:var(--t2);cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s}
+.soc-btn:hover{border-color:var(--b2);color:var(--text)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:18px;right:18px;z-index:999;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rl);padding:11px 14px;max-width:290px;display:none;animation:toastIn .25s var(--ease);box-shadow:var(--shadow)}
+.toast.show{display:block}
+@keyframes toastIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.toast-t{font-weight:600;font-size:11px;margin-bottom:2px;display:flex;align-items:center;gap:5px}
+.toast-b{font-size:10px;color:var(--t2)}
+
+/* ── CR POP ── */
+.crpop{position:fixed;z-index:998;pointer-events:none;font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:var(--cr-col);text-shadow:0 0 18px rgba(224,168,32,.5);animation:crPA 1.4s var(--ease) forwards}
+@keyframes crPA{0%{opacity:1;transform:translateY(0) scale(1)}70%{opacity:1;transform:translateY(-44px) scale(1.1)}100%{opacity:0;transform:translateY(-70px) scale(.8)}}
+
+/* ── PKG CARD ── */
+.pkg{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:12px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.pkg:hover{border-color:var(--gold)}.pkg.hot{border-color:var(--gold);background:var(--goldbg)}
+.pkg-hot{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-size:8px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.pkg-cr{font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:var(--cr-col)}
+
+/* ── ACHIEVEMENT ── */
+.ach{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);padding:12px;text-align:center;transition:all .2s;position:relative;cursor:pointer}
+.ach.unlocked{border-color:var(--goldbd);background:var(--goldbg)}
+.ach.locked{opacity:.45;filter:grayscale(1)}
+.ach:hover.unlocked{transform:translateY(-2px)}
+.ach-new{position:absolute;top:-6px;right:-6px;background:var(--terra);color:#fff;font-size:8px;font-weight:700;padding:2px 5px;border-radius:8px}
+
+/* ── VERIFY STEPS ── */
+.vstep{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--r);background:var(--bg3);border:1px solid var(--border);margin-bottom:7px;cursor:pointer;transition:all .15s}
+.vstep:hover{border-color:var(--b2)}
+.vstep.vdone{border-color:var(--grnbd);background:var(--grnbg)}
+.vstep-ico{width:30px;height:30px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+
+/* ── FRAUD FLAGS ── */
+.fraud-flag{background:var(--redbg);border:1px solid var(--redbd);border-radius:var(--r);padding:10px 12px;margin-bottom:7px;display:flex;align-items:flex-start;gap:8px;font-size:11px}
+.fraud-ok{background:var(--grnbg);border:1px solid var(--grnbd);border-radius:var(--r);padding:10px 12px;margin-bottom:7px;display:flex;align-items:flex-start;gap:8px;font-size:11px}
+
+/* ── PATH NODE ── */
+.pnode{display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px solid var(--border);border-radius:var(--rl);margin-bottom:7px;transition:all .2s}
+.pnode.done{border-color:var(--grnbd);background:var(--grnbg)}
+.pnode.current{border-color:var(--terbd);background:var(--terbg)}
+.pnode.locked{opacity:.4}
+.pnode-ico{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.pconn{width:2px;height:14px;margin-left:21px;background:var(--border)}
+.pconn.done{background:var(--green)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+input[type=range]{width:100%;accent-color:var(--terra);cursor:pointer}
+
+@media(max-width:768px){#sb{display:none}.g3,.g4,.g5{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}.page{padding:14px}}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ LANDING ═══════════════════════════════ -->
+<div id="landing">
+  <div class="land-card">
+    <div class="land-logo">Skill<em>Bridge</em> <span style="font-family:'Sora',sans-serif;font-size:9px;background:var(--terbg);color:var(--terra);padding:2px 6px;border-radius:4px;font-weight:700">v3</span></div>
+    <p style="font-size:11px;color:var(--t3);margin-bottom:18px">Peer-to-peer skill economy · 1 Credit = $0.10 USD · Zero middlemen</p>
+    <div class="land-tabs">
+      <div class="ltab act" id="lt-a" onclick="switchLTab('login')">Sign in</div>
+      <div class="ltab" id="lt-b" onclick="switchLTab('register')">Join free</div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="lf-login">
+      <div class="field"><label>Email</label><input id="le" type="email" value="demo@skillbridge.io" placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" value="demo" placeholder="••••••••"></div>
+      <div style="margin-bottom:10px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11px;color:var(--t2)"><input type="checkbox" id="load-demo" checked> <span>Load demo account (recommended)</span></label></div>
+      <button class="btn btn-pri btn-full btn-lg" onclick="doLogin()">Sign in to SkillBridge →</button>
+      <div class="or-line">or</div>
+      <div class="g2"><div class="soc-btn" onclick="doLogin()">🌐 Google</div><div class="soc-btn" onclick="doLogin()">📘 Facebook</div></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="lf-reg" style="display:none">
+      <div class="step-dots" id="reg-dots"><div class="sdot on"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div><div class="sdot"></div></div>
+      <div class="onb act" id="rs1">
+        <div class="g2">
+          <div class="field"><label>First name</label><input id="rfn" placeholder="Amara"></div>
+          <div class="field"><label>Last name</label><input placeholder="Kofi"></div>
+        </div>
+        <div class="field"><label>Email</label><input type="email" id="rem" placeholder="you@example.com"></div>
+        <div class="field"><label>Country</label>
+          <select id="rcty"><option>Select country...</option><option>Ghana</option><option>Nigeria</option><option>Kenya</option><option>South Africa</option><option>United States</option><option>United Kingdom</option><option>UAE</option><option>India</option><option>Brazil</option><option>Philippines</option><option>Japan</option><option>Germany</option><option>France</option><option>Other</option></select>
+        </div>
+        <div class="field"><label>Phone (for verification)</label><input type="tel" placeholder="+233 XX XXX XXXX"></div>
+        <div style="background:var(--redbg);border:1px solid var(--redbd);border-radius:var(--r);padding:9px;font-size:10px;color:var(--red);margin-bottom:10px">⚠ One account per person. We use device fingerprinting + phone verification to prevent duplicate accounts. Violations result in permanent ban.</div>
+        <button class="btn btn-pri btn-full" onclick="rs(2)">Continue →</button>
+      </div>
+      <div class="onb" id="rs2">
+        <p style="font-size:12px;font-weight:500;margin-bottom:10px">What can you <span style="color:var(--green2)">offer</span>? <span style="color:var(--t3);font-weight:400;font-size:10px">(these become your listings)</span></p>
+        <div class="chip-g"><div class="chip" onclick="this.classList.toggle('on')">Python</div><div class="chip" onclick="this.classList.toggle('on')">JavaScript</div><div class="chip" onclick="this.classList.toggle('on')">Data analysis</div><div class="chip" onclick="this.classList.toggle('on')">Spanish</div><div class="chip" onclick="this.classList.toggle('on')">French</div><div class="chip" onclick="this.classList.toggle('on')">Graphic design</div><div class="chip" onclick="this.classList.toggle('on')">Guitar</div><div class="chip" onclick="this.classList.toggle('on')">Cooking</div><div class="chip" onclick="this.classList.toggle('on')">Photography</div><div class="chip" onclick="this.classList.toggle('on')">Writing</div><div class="chip" onclick="this.classList.toggle('on')">Finance</div><div class="chip" onclick="this.classList.toggle('on')">Yoga</div><div class="chip" onclick="this.classList.toggle('on')">Chess</div><div class="chip" onclick="this.classList.toggle('on')">Marketing</div></div>
+        <div style="display:flex;gap:6px;margin-top:14px"><button class="btn btn-ghost" onclick="rs(1)">←</button><button class="btn btn-pri" style="flex:1;justify-content:center" onclick="rs(3)">Next →</button></div>
+      </div>
+      <div class="onb" id="rs3">
+        <p style="font-size:12px;font-weight:500;margin-bottom:10px">What do you want to <span style="color:var(--terra2)">learn</span>?</p>
+        <div class="chip-g"><div class="chip" onclick="this.classList.toggle('on')">Python</div><div class="chip" onclick="this.classList.toggle('on')">Machine learning</div><div class="chip" onclick="this.classList.toggle('on')">Mandarin</div><div class="chip" onclick="this.classList.toggle('on')">Arabic</div><div class="chip" onclick="this.classList.toggle('on')">UX design</div><div class="chip" onclick="this.classList.toggle('on')">Piano</div><div class="chip" onclick="this.classList.toggle('on')">Accounting</div><div class="chip" onclick="this.classList.toggle('on')">Video editing</div><div class="chip" onclick="this.classList.toggle('on')">Public speaking</div><div class="chip" onclick="this.classList.toggle('on')">SEO</div><div class="chip" onclick="this.classList.toggle('on')">Chess</div></div>
+        <div style="display:flex;gap:6px;margin-top:14px"><button class="btn btn-ghost" onclick="rs(2)">←</button><button class="btn btn-pri" style="flex:1;justify-content:center" onclick="rs(4)">Next →</button></div>
+      </div>
+      <div class="onb" id="rs4">
+        <p style="font-size:12px;font-weight:500;margin-bottom:12px">Set your experience level</p>
+        <div class="field"><label>Primary skill experience</label>
+          <select id="rlvl"><option value="10">Beginner — earn 10–15 cr/hr</option><option value="20">Intermediate — earn 20–30 cr/hr</option><option value="35" selected>Advanced — earn 35–50 cr/hr</option><option value="60">Expert / Professional — earn 60–100 cr/hr</option></select>
+        </div>
+        <div class="field"><label>Password</label><input type="password" placeholder="Min 12 characters"></div>
+        <div style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:var(--r);padding:9px;font-size:10px;color:var(--gold);margin-bottom:10px">🎁 Join bonus: <strong>5 credits ($0.50)</strong> — unlocked after first completed session (prevents farming)</div>
+        <div style="display:flex;gap:6px;margin-top:4px"><button class="btn btn-ghost" onclick="rs(3)">←</button><button class="btn btn-pri" style="flex:1;justify-content:center" onclick="rs(5)">Continue →</button></div>
+      </div>
+      <div class="onb" id="rs5">
+        <p style="font-size:12px;font-weight:500;margin-bottom:12px">Read the rules</p>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;font-size:11px;line-height:1.7;color:var(--t2);margin-bottom:12px;max-height:160px;overflow-y:auto">
+          <div style="font-weight:600;color:var(--text);margin-bottom:6px">SkillBridge Platform Rules</div>
+          <div>1. <strong>One account per person.</strong> Multiple accounts = permanent ban + forfeited credits.<br>
+          2. <strong>No fake services.</strong> List only skills you can genuinely deliver.<br>
+          3. <strong>Escrow protects everyone.</strong> Credits are held until both parties confirm completion.<br>
+          4. <strong>Reviews must be honest.</strong> Fake reviews = 30-day ban + 50 credit penalty.<br>
+          5. <strong>Disputes are handled fairly.</strong> Submit evidence. Moderators decide within 48hrs.<br>
+          6. <strong>No off-platform payments.</strong> All transactions must go through the escrow system.<br>
+          7. <strong>Platform fee: 5%</strong> on all transactions (burned, not recycled, to prevent inflation).<br>
+          8. <strong>Tax responsibility:</strong> You are responsible for reporting income in your jurisdiction.<br>
+          9. <strong>Earning limit:</strong> 500 cr/day to prevent farming. Resets at midnight UTC.<br>
+          10. Professional services (legal, medical, financial) require certification upload.</div>
+        </div>
+        <label style="display:flex;align-items:flex-start;gap:7px;cursor:pointer;font-size:11px;color:var(--t2);margin-bottom:12px"><input type="checkbox" id="agree-rules"> <span>I agree to all platform rules and understand violations result in penalties.</span></label>
+        <div style="display:flex;gap:6px"><button class="btn btn-ghost" onclick="rs(4)">←</button><button class="btn btn-pri" style="flex:1;justify-content:center" onclick="doRegister()">Create account 🎉</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ APP ═══════════════════════════════ -->
+<div id="app" style="display:none">
+
+<!-- SIDEBAR -->
+<div id="sb">
+  <div class="sb-logo">Skill<em>Bridge</em><span class="sb-logo-v">v3</span></div>
+  <div class="sb-wal" onclick="nav('wallet')">
+    <div class="sb-wal-lbl">SkillCredits</div>
+    <div class="sb-wal-val mono" id="sb-bal">0</div>
+    <div class="sb-wal-usd" id="sb-usd">≈ $0.00</div>
+    <div class="sb-wal-bar"><div class="sb-wal-fill" id="sb-fill" style="width:0%"></div></div>
+  </div>
+  <div class="sb-streak"><span class="sf">🔥</span><div><div class="streak-n" id="sb-str">0</div><div style="font-size:9px;color:var(--t3)">day streak</div></div><div style="margin-left:auto;text-align:right"><div style="font-size:9px;color:var(--t3)">Daily limit</div><div class="cr-val" style="font-size:11px" id="daily-remain">500 cr left</div></div></div>
+  <div class="sb-sec">Platform</div>
+  <div class="si act" onclick="nav('dashboard',this)"><span class="ico">⊞</span> Dashboard</div>
+  <div class="si" onclick="nav('marketplace',this)"><span class="ico">🌐</span> Marketplace</div>
+  <div class="si" onclick="nav('my-listings',this)"><span class="ico">📋</span> My Listings</div>
+  <div class="si" onclick="nav('sessions',this)"><span class="ico">📅</span> Sessions <span class="sb-badge" id="sess-badge" style="display:none">!</span></div>
+  <div class="si" onclick="nav('escrow',this)"><span class="ico">🔒</span> Escrow</div>
+  <div class="si" onclick="nav('disputes',this)"><span class="ico">⚖</span> Disputes</div>
+  <div class="sb-sec">Economy</div>
+  <div class="si" onclick="nav('wallet',this)"><span class="ico">◈</span> Wallet</div>
+  <div class="si" onclick="nav('inventory',this)"><span class="ico">🎒</span> Inventory <span class="sb-badge-g" id="inv-cnt">0</span></div>
+  <div class="si" onclick="nav('affiliate',this)"><span class="ico">🤝</span> Affiliate</div>
+  <div class="sb-sec">Growth</div>
+  <div class="si" onclick="nav('trust',this)"><span class="ico">🛡</span> Trust & Verify</div>
+  <div class="si" onclick="nav('achievements',this)"><span class="ico">🏆</span> Achievements</div>
+  <div class="si" onclick="nav('leaderboard',this)"><span class="ico">📊</span> Leaderboard</div>
+  <div class="si" onclick="nav('paths',this)"><span class="ico">🗺</span> Skill Paths</div>
+  <div class="si" onclick="nav('tutorial',this)"><span class="ico">📖</span> Tutorial</div>
+  <div class="si" onclick="nav('architecture',this)"><span class="ico">⚙</span> System Design</div>
+  <div class="sb-spacer"></div>
+  <div class="sb-user" onclick="nav('profile')">
+    <div class="sb-uav" id="sb-av">?</div>
+    <div><div class="sb-uname" id="sb-un">Account</div><div class="sb-ulvl" id="sb-ul">⭐ Unverified</div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="topbar">
+    <div class="srch">
+      <span class="srch-ico">⌕</span>
+      <input id="gs" type="text" placeholder="Search services, people, skills..." oninput="doSearch(this.value)" onfocus="document.getElementById('sdp').classList.add('open')" onblur="setTimeout(()=>document.getElementById('sdp').classList.remove('open'),180)">
+      <div class="sdrop" id="sdp"></div>
+    </div>
+    <div class="tbr">
+      <div class="tb ndot-wrap" onclick="showNotifs()"><span>🔔</span><div class="ndot" id="ndot"></div></div>
+      <div class="tb" onclick="nav('escrow')"><span>🔒</span> Escrow</div>
+      <div class="tb" onclick="openBuyModal()"><span>◈</span> Buy credits</div>
+      <div class="tb pri" onclick="openCreateListing()">+ List a service</div>
+      <div class="tb" onclick="doLogout()">Sign out</div>
+    </div>
+  </div>
+
+  <div id="content">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page act" id="page-dashboard">
+  <div class="ph fb">
+    <div><h1 id="dash-h1">Welcome to SkillBridge</h1><p id="dash-sub">Your personal knowledge economy starts here</p></div>
+    <div id="daily-chal-btn" style="background:var(--goldbg);border:1px solid var(--goldbd);border-radius:var(--rl);padding:8px 12px;cursor:pointer;text-align:right" onclick="showDailyChal()">
+      <div style="font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em">Daily challenge</div>
+      <div style="font-size:12px;font-weight:600" id="dc-title">Loading...</div>
+      <div class="cr-val" style="font-size:10px">+reward cr</div>
+    </div>
+  </div>
+  <div class="g4" style="margin-bottom:14px" id="dash-stats"></div>
+  <div id="new-user-banner" style="background:linear-gradient(135deg,var(--terbg),var(--purpbg));border:1px solid var(--terbd);border-radius:var(--rl);padding:20px;margin-bottom:14px">
+    <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:8px">You're new here — let's get you started 👋</div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:14px">Complete these steps to unlock your 5 credit joining bonus and start earning.</div>
+    <div id="onboard-steps"></div>
+  </div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="fb" style="margin-bottom:12px"><div class="sec-lbl" style="margin:0">Active services near you</div><button class="btn btn-ghost" style="padding:3px 8px;font-size:10px" onclick="nav('marketplace')">Browse all →</button></div>
+      <div id="dash-listings"></div>
+    </div>
+    <div class="card">
+      <div class="fb" style="margin-bottom:12px"><div class="sec-lbl" style="margin:0">Your sessions</div><button class="btn btn-ghost" style="padding:3px 8px;font-size:10px" onclick="nav('sessions')">See all →</button></div>
+      <div id="dash-sessions"></div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="card"><div class="sec-lbl">Credit rates — live demand</div><div id="dash-rates"></div></div>
+    <div class="card"><div class="sec-lbl">Platform health</div><div id="dash-health"></div></div>
+    <div class="card"><div class="sec-lbl">Your activity</div><div id="dash-act"></div></div>
+  </div>
+</div>
+
+<!-- ═══ MARKETPLACE ═══ -->
+<div class="page" id="page-marketplace">
+  <div class="ph fb">
+    <div><h1>Service Marketplace</h1><p>Real listings from verified users · Pay credits only · Escrow protected</p></div>
+    <div class="fg">
+      <select id="mkt-sort" onchange="renderMarket()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:10px;color:var(--text);font-family:'Sora',sans-serif;outline:none">
+        <option>Best match</option><option>Lowest price</option><option>Highest rated</option><option>Newest</option>
+      </select>
+      <select id="mkt-cat" onchange="renderMarket()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:10px;color:var(--text);font-family:'Sora',sans-serif;outline:none">
+        <option value="">All categories</option><option value="tech">Technology</option><option value="lang">Languages</option><option value="creative">Creative</option><option value="business">Business</option><option value="life">Life skills</option>
+      </select>
+    </div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--goldbd);border-radius:var(--rl);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+    <span style="font-size:18px">🔒</span>
+    <div style="flex:1"><div style="font-size:12px;font-weight:500">All transactions are escrow-protected</div><div style="font-size:10px;color:var(--t3)">Credits are held securely until both parties confirm completion. 5% platform fee is burned (not recycled). 1 credit = $0.10 USD.</div></div>
+    <div class="cr-val" style="font-size:16px;font-weight:700" id="mkt-bal-disp">0 cr</div>
+  </div>
+  <div class="g3" id="mkt-grid"></div>
+  <div id="mkt-empty" class="empty" style="display:none"><div class="empty-ico">🔍</div><div style="font-size:13px;font-weight:500;margin-bottom:6px">No services listed yet</div><div style="font-size:11px;margin-bottom:14px">Be the first to list a service in this category.</div><button class="btn btn-pri" onclick="openCreateListing()">Create first listing →</button></div>
+</div>
+
+<!-- ═══ MY LISTINGS ═══ -->
+<div class="page" id="page-my-listings">
+  <div class="ph fb">
+    <div><h1>My Listings</h1><p>Services you offer · Track bookings · Manage availability</p></div>
+    <button class="btn btn-pri" onclick="openCreateListing()">+ Create listing</button>
+  </div>
+  <div id="my-listings-grid" class="g3"></div>
+  <div id="my-listings-empty" class="empty"><div class="empty-ico">📋</div><div style="font-size:13px;font-weight:500;margin-bottom:6px">You haven't listed any services yet</div><div style="font-size:11px;margin-bottom:14px">List a skill you can teach or a service you can provide. You earn credits every time someone books.</div><button class="btn btn-pri" onclick="openCreateListing()">Create your first listing →</button></div>
+</div>
+
+<!-- ═══ SESSIONS ═══ -->
+<div class="page" id="page-sessions">
+  <div class="ph"><h1>Sessions</h1><p>Upcoming, active, and completed exchanges</p></div>
+  <div class="g2">
+    <div>
+      <div class="sec-lbl">Active & upcoming</div>
+      <div id="active-sessions"></div>
+    </div>
+    <div>
+      <div class="sec-lbl">Completed sessions</div>
+      <div id="completed-sessions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ESCROW ═══ -->
+<div class="page" id="page-escrow">
+  <div class="ph"><h1>Escrow System</h1><p>Credits held securely until both parties confirm completion</p></div>
+  <div style="background:var(--bg2);border:1px solid var(--goldbd);border-radius:var(--rl);padding:16px;margin-bottom:16px">
+    <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--gold)">How escrow works</div>
+    <div class="escrow-steps" id="esc-flow-steps"></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px" id="esc-flow-labels"></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="sec-lbl">Active escrows</div>
+      <div id="active-escrows"></div>
+    </div>
+    <div>
+      <div class="sec-lbl">Escrow history</div>
+      <div id="escrow-history"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DISPUTES ═══ -->
+<div class="page" id="page-disputes">
+  <div class="ph"><h1>Dispute Resolution</h1><p>Fair, evidence-based resolution within 48 hours</p></div>
+  <div class="g2">
+    <div>
+      <div class="sec-lbl">Open disputes</div>
+      <div id="open-disputes"></div>
+      <div class="card" style="margin-top:14px">
+        <div class="sec-lbl">Open a new dispute</div>
+        <div class="field"><label>Session / escrow ID</label><input placeholder="ESC-XXXXX"></div>
+        <div class="field"><label>Dispute reason</label>
+          <select><option>Service not delivered</option><option>Quality below agreed standard</option><option>No-show / cancellation</option><option>Fraud / misrepresentation</option><option>Harassment or misconduct</option></select>
+        </div>
+        <div class="field"><label>Description of issue</label><textarea placeholder="Describe exactly what happened, dates, and what outcome you expect..."></textarea></div>
+        <div class="field"><label>Evidence (screenshots, recordings)</label>
+          <div class="evid-drop" onclick="toast('📁','Evidence upload','Drag files here or click to upload screenshots, video clips, or documents.')">📎 Drop files here or click to upload</div>
+        </div>
+        <button class="btn btn-pri btn-full" onclick="submitDispute()">Submit dispute →</button>
+        <p style="font-size:10px;color:var(--t3);margin-top:8px">False disputes result in 50 credit penalty. Frivolous filings can lead to temporary suspension.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Dispute resolution process</div>
+        <div id="dispute-process"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl">Penalties for bad actors</div>
+        <div id="penalty-table"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WALLET ═══ -->
+<div class="page" id="page-wallet">
+  <div class="ph"><h1>Wallet</h1><p>1 Credit = $0.10 USD · Earn by providing services · Spend on any listed service</p></div>
+  <div style="background:var(--bg2);border:1px solid var(--goldbd);border-radius:var(--rxl);padding:22px 26px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden">
+    <div style="position:absolute;right:-20px;top:-20px;width:160px;height:160px;border-radius:50%;background:var(--goldbg);pointer-events:none"></div>
+    <div>
+      <div style="font-size:10px;color:var(--t3);margin-bottom:3px">Available balance</div>
+      <div style="font-family:'Playfair Display',serif;font-size:46px;font-weight:900;color:var(--cr-col);line-height:1" id="wal-bal">0</div>
+      <div style="font-size:11px;color:var(--t3)">credits · <span id="wal-usd">$0.00</span> USD value</div>
+      <div style="font-size:10px;color:var(--red);margin-top:3px">Daily earn limit: <span id="daily-lim">500 cr remaining</span></div>
+      <div style="display:flex;gap:6px;margin-top:14px">
+        <button class="btn btn-gold" onclick="openBuyModal()">Buy credits</button>
+        <button class="btn btn-ghost" onclick="nav('marketplace')">Spend credits</button>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:10px;color:var(--t3);margin-bottom:5px">This month</div>
+      <div style="font-size:22px;font-weight:700;color:var(--green2)">+<span id="wal-earn">0</span> cr</div>
+      <div style="font-size:9px;color:var(--t3)">earned</div>
+      <div style="font-size:22px;font-weight:700;color:var(--terra);margin-top:6px">-<span id="wal-spent">0</span> cr</div>
+      <div style="font-size:9px;color:var(--t3)">spent</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:10px">Platform fee (burned): <span id="wal-burned">0</span> cr</div>
+    </div>
+  </div>
+  <div class="g3" style="margin-bottom:14px">
+    <div class="card"><div class="sec-lbl">How to earn credits</div><div id="earn-guide"></div></div>
+    <div class="card"><div class="sec-lbl">Dynamic rates — live market</div><div id="live-rates"></div></div>
+    <div class="card"><div class="sec-lbl">Transaction history</div><div id="tx-hist"></div></div>
+  </div>
+  <div class="card">
+    <div class="sec-lbl">Buy credits with real money</div>
+    <div style="background:var(--redbg);border:1px solid var(--redbd);border-radius:var(--r);padding:10px;font-size:10px;color:var(--red);margin-bottom:14px">⚠ <strong>Risk disclosure:</strong> SkillBridge credits are not securities or investment products. They cannot be redeemed for cash. USD prices are fixed at $0.10/credit. We comply with applicable laws in each jurisdiction. Consult a tax professional — income from services is taxable in most countries.</div>
+    <div class="g4" id="pkg-grid"></div>
+  </div>
+</div>
+
+<!-- ═══ INVENTORY ═══ -->
+<div class="page" id="page-inventory">
+  <div class="ph fb">
+    <div><h1>Inventory</h1><p>Your purchased services, certificates, and earned items</p></div>
+    <select id="inv-filt" onchange="renderInv()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:10px;color:var(--text);font-family:'Sora',sans-serif;outline:none">
+      <option value="">All items</option><option value="session">Sessions</option><option value="cert">Certificates</option><option value="membership">Membership</option><option value="bundle">Bundles</option><option value="achievement">Achievements</option>
+    </select>
+  </div>
+  <div id="inv-summary" style="margin-bottom:14px"></div>
+  <div class="g4" id="inv-grid"></div>
+  <div id="inv-empty" class="empty" style="display:none"><div class="empty-ico">🎒</div><div style="font-size:13px;font-weight:500;margin-bottom:6px">Your inventory is empty</div><div style="font-size:11px;margin-bottom:14px">Purchase services from the marketplace to fill your inventory. Each item can be used exactly once.</div><button class="btn btn-pri" onclick="nav('marketplace')">Browse marketplace →</button></div>
+</div>
+
+<!-- ═══ AFFILIATE ═══ -->
+<div class="page" id="page-affiliate">
+  <div class="ph"><h1>Affiliate Program</h1><p>Earn real credits for every person you bring to SkillBridge</p></div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="sec-lbl">Your referral code</div>
+      <div style="background:var(--bg3);border:1px solid var(--goldbd);border-radius:var(--rl);padding:16px;text-align:center;margin-bottom:12px">
+        <div style="font-family:'DM Mono',monospace;font-size:26px;font-weight:700;color:var(--cr-col);letter-spacing:.08em" id="aff-code">LOADING</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:4px">Share this code or link</div>
+      </div>
+      <div style="display:flex;gap:7px">
+        <button class="btn btn-pri" style="flex:1;justify-content:center" onclick="copyRefCode()">📋 Copy code</button>
+        <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="shareRefLink()">🔗 Copy link</button>
+      </div>
+      <div class="divider"></div>
+      <div class="sec-lbl">Your affiliate stats</div>
+      <div class="g2">
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center"><div class="cr-val mono" style="font-size:18px" id="aff-referrals">0</div><div style="font-size:9px;color:var(--t3)">referrals</div></div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center"><div class="cr-val mono" style="font-size:18px" id="aff-earned">0</div><div style="font-size:9px;color:var(--t3)">cr earned</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-lbl">Commission structure</div>
+      <div id="aff-tiers"></div>
+      <div class="divider"></div>
+      <div style="font-size:11px;color:var(--t3);line-height:1.6">
+        <strong style="color:var(--text)">Anti-pyramid safeguards:</strong><br>
+        • Max 2 tiers (you + your referrals). No deeper chains to prevent pyramid structures.<br>
+        • Commission only paid after referred user completes 1 real session.<br>
+        • Commission capped at 50 cr/referred user to prevent gaming.<br>
+        • Affiliate earnings count toward daily limit.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sec-lbl">Referral activity</div>
+    <div id="aff-activity"></div>
+  </div>
+</div>
+
+<!-- ═══ TRUST & VERIFY ═══ -->
+<div class="page" id="page-trust">
+  <div class="ph"><h1>Trust & Verification</h1><p>Multi-layer trust system · Portable across cultures and borders</p></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Your trust score</div>
+        <div class="fg" style="margin-bottom:16px;align-items:flex-start">
+          <div class="trust-ring">
+            <svg width="60" height="60" viewBox="0 0 60 60"><circle cx="30" cy="30" r="24" fill="none" stroke="var(--bg5)" stroke-width="4"/><circle id="trust-arc" cx="30" cy="30" r="24" fill="none" stroke="var(--gold)" stroke-width="4" stroke-dasharray="0 151" stroke-linecap="round"/></svg>
+            <div class="trv" id="trust-score-disp">0</div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600;margin-bottom:4px">Trust Score</div>
+            <div style="font-size:10px;color:var(--t3);margin-bottom:8px">0 = Unverified · 100 = Fully trusted</div>
+            <div id="trust-breakdown"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl">Identity verification layers</div>
+        <div id="id-verify-layers"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Skill verification</div>
+        <div style="font-size:11px;color:var(--t3);margin-bottom:10px">Verified skills command 30–80% higher credit rates and appear with a ✓ badge.</div>
+        <div id="skill-verify"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl">Fraud detection signals</div>
+        <div id="fraud-signals"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ACHIEVEMENTS ═══ -->
+<div class="page" id="page-achievements">
+  <div class="ph fb">
+    <div><h1>Achievements</h1><p>Unlock badges · Earn credit rewards · Build your legend</p></div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:8px 14px;text-align:right"><div style="font-size:9px;color:var(--t3)">Unlocked</div><div style="font-size:18px;font-weight:700;color:var(--gold)" id="ach-count">0/0</div></div>
+  </div>
+  <div class="g5" id="ach-grid"></div>
+</div>
+
+<!-- ═══ LEADERBOARD ═══ -->
+<div class="page" id="page-leaderboard">
+  <div class="ph fb">
+    <div><h1>Leaderboard</h1><p>Top earners globally · Resets monthly</p></div>
+    <select id="lb-type" onchange="renderLB()" style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;font-size:10px;color:var(--text);font-family:'Sora',sans-serif;outline:none">
+      <option>Credits earned</option><option>Sessions completed</option><option>Trust score</option><option>Streak</option>
+    </select>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="sec-lbl">Global top 10</div><div id="lb-global"></div></div>
+    <div class="card"><div class="sec-lbl">Your ranking</div><div id="lb-yours"></div></div>
+  </div>
+</div>
+
+<!-- ═══ SKILL PATHS ═══ -->
+<div class="page" id="page-paths">
+  <div class="ph"><h1>Skill Paths</h1><p>Structured journeys with credit rewards at each milestone</p></div>
+  <div class="g2" id="paths-grid"></div>
+</div>
+
+<!-- ═══ TUTORIAL ═══ -->
+<div class="page" id="page-tutorial">
+  <div class="ph"><h1>How to use SkillBridge</h1><p>Everything you need to start earning and learning</p></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Getting started</div>
+        <div id="tut-start"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl">Earning credits</div>
+        <div id="tut-earn"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Spending credits</div>
+        <div id="tut-spend"></div>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-lbl">Trust & safety</div>
+        <div id="tut-safety"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl">Tax & legal notes</div>
+        <div id="tut-legal"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SYSTEM ARCHITECTURE ═══ -->
+<div class="page" id="page-architecture">
+  <div class="ph"><h1>System Architecture</h1><p>How SkillBridge works at scale — the full technical and economic design</p></div>
+  <div class="g2">
+    <div id="arch-left"></div>
+    <div id="arch-right"></div>
+  </div>
+</div>
+
+<!-- ═══ PROFILE ═══ -->
+<div class="page" id="page-profile">
+  <div class="ph"><h1>My Profile</h1><p>Your public reputation · Portable across cultures</p></div>
+  <div class="g2">
+    <div class="card" id="prof-card"></div>
+    <div>
+      <div class="card" style="margin-bottom:12px"><div class="sec-lbl">Reviews received</div><div id="rev-list"></div></div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══ MODALS ═══ -->
+<div class="overlay" id="buy-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-title">Buy SkillCredits</div>
+    <div class="modal-sub">1 credit = $0.10 USD · Instant delivery · No refunds (platform policy)</div>
+    <div class="g2" id="modal-pkgs" style="margin-bottom:16px"></div>
+    <div class="field"><label>Card number</label><input placeholder="4242 4242 4242 4242" maxlength="19"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="field"><label>Expiry</label><input placeholder="MM / YY"></div>
+      <div class="field"><label>CVC</label><input placeholder="123" maxlength="3"></div>
+    </div>
+    <button class="btn btn-pri btn-full btn-lg" onclick="completePurchase()">Pay securely →</button>
+    <p style="font-size:9px;color:var(--t3);text-align:center;margin-top:8px">🔒 Stripe · SSL encrypted · Compliant with PCI DSS · Income may be taxable</p>
+  </div>
+</div>
+
+<div class="overlay" id="create-listing-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-title">Create a service listing</div>
+    <div class="modal-sub">List a skill you can teach or a service you can provide. Platform AI will suggest optimal pricing.</div>
+    <div class="field"><label>Service title</label><input id="lst-title" placeholder="e.g. Python for beginners — 1hr session"></div>
+    <div class="field"><label>Category</label>
+      <select id="lst-cat"><option value="tech">Technology</option><option value="lang">Languages</option><option value="creative">Creative</option><option value="business">Business</option><option value="life">Life skills</option></select>
+    </div>
+    <div class="field"><label>Your skill level</label>
+      <select id="lst-level" onchange="suggestPrice()">
+        <option value="10">Beginner (AI suggests: 10–15 cr/hr)</option>
+        <option value="20">Intermediate (AI suggests: 20–30 cr/hr)</option>
+        <option value="35" selected>Advanced (AI suggests: 35–50 cr/hr)</option>
+        <option value="60">Expert / Professional (AI suggests: 60–100 cr/hr)</option>
+      </select>
+    </div>
+    <div class="field"><label>Price (credits per hour) <span id="price-suggest" style="color:var(--gold);font-size:9px"></span></label><input id="lst-price" type="number" min="5" max="200" value="35" placeholder="35"></div>
+    <div class="field"><label>Session duration</label>
+      <select id="lst-dur"><option value="0.5">30 minutes</option><option value="1" selected>1 hour</option><option value="1.5">1.5 hours</option><option value="2">2 hours</option></select>
+    </div>
+    <div class="field"><label>Description (be specific — vague listings are flagged)</label><textarea id="lst-desc" placeholder="What exactly will the learner get? Specific topics, prerequisites, what they'll be able to do after..."></textarea></div>
+    <div style="background:var(--redbg);border:1px solid var(--redbd);border-radius:var(--r);padding:9px;font-size:10px;color:var(--red);margin-bottom:10px">⚠ AI quality check: Listings with fewer than 80 characters in description or vague titles are auto-rejected. Professional services (legal, medical, financial) require certification upload.</div>
+    <button class="btn btn-pri btn-full btn-lg" onclick="createListing()">Submit listing for review →</button>
+    <p style="font-size:9px;color:var(--t3);margin-top:7px;text-align:center">Listings reviewed within 2hrs. AI + human moderators check for quality and fraud signals.</p>
+  </div>
+</div>
+
+<div class="overlay" id="booking-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" id="booking-modal-content"></div>
+</div>
+
+<div class="overlay" id="inv-item-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" id="inv-item-content"></div>
+</div>
+
+<div class="overlay" id="daily-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-title">Daily Challenges</div>
+    <div class="modal-sub">Complete these today to earn bonus credits</div>
+    <div id="daily-list"></div>
+    <button class="btn btn-ghost btn-full" style="margin-top:12px" onclick="document.getElementById('daily-modal').classList.remove('open')">Close</button>
+  </div>
+</div>
+
+<div class="overlay" id="notif-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-title">Notifications</div>
+    <div id="notif-list"></div>
+    <button class="btn btn-ghost btn-full" style="margin-top:10px" onclick="document.getElementById('notif-modal').classList.remove('open')">Mark all read</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast-el">
+  <div class="toast-t" id="toast-t"></div>
+  <div class="toast-b" id="toast-b"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// STATE — single source of truth for the app
+// ══════════════════════════════════════════════════════════════════
+const DB = {
+  listings: [], // All service listings on the platform
+  sessions: [],
+  escrows: [],
+  users: {},    // All users keyed by id
+  reviews: {},
+};
+
+const S = {
+  uid: null,
+  credits: 0,
+  streak: 0,
+  dailyEarned: 0,
+  dailyLimit: 500,
+  inventory: [],
+  listings: [],    // User's own listings
+  trustScore: 0,
+  verifications: { phone: false, email: false, id: false, skills: false },
+  affiliateCode: '',
+  affiliateReferrals: 0,
+  affiliateEarned: 0,
+  earnedThisMonth: 0,
+  spentThisMonth: 0,
+  burnedTotal: 0,
+  transactions: [],
+  notifs: [],
+  isDemo: false,
+  selPkg: 1,
+};
+
+// ── STATIC DATA ──
+const PKGS = [
+  {cr:10,price:'$1.00',rate:'$0.10/cr',hot:false},
+  {cr:50,price:'$4.50',rate:'$0.09/cr — save 10%',hot:false},
+  {cr:120,price:'$9.99',rate:'$0.083/cr — Best value',hot:true},
+  {cr:300,price:'$22',rate:'$0.073/cr — save 27%',hot:false},
+];
+
+const RATES = [
+  {skill:'Machine Learning',rate:75,demand:'Extreme',trend:'↑↑',col:'var(--purple2)',dmult:1.5},
+  {skill:'System Design',rate:55,demand:'Very High',trend:'↑',col:'var(--terra2)',dmult:1.35},
+  {skill:'Advanced Python',rate:42,demand:'High',trend:'↑',col:'var(--terra)',dmult:1.2},
+  {skill:'UX / Figma',rate:35,demand:'High',trend:'→',col:'var(--blue)',dmult:1.1},
+  {skill:'Spanish conversation',rate:25,demand:'High',trend:'→',col:'var(--green2)',dmult:1.05},
+  {skill:'Financial modeling',rate:40,demand:'High',trend:'↑',col:'var(--gold)',dmult:1.2},
+  {skill:'Cooking basics',rate:12,demand:'Medium',trend:'↓',col:'var(--t2)',dmult:0.9},
+  {skill:'Basic English',rate:10,demand:'Low',trend:'↓',col:'var(--t3)',dmult:0.8},
+];
+
+const EARN_GUIDE = [
+  {ico:'▲',lbl:'Provide a service',rate:'10–100 cr/hr',note:'Dynamically priced by demand + verified skill level'},
+  {ico:'✓',lbl:'Session completed (escrow release)',rate:'base rate −5%',note:'5% burned as platform fee to prevent inflation'},
+  {ico:'🔥',lbl:'Daily teaching streak',rate:'+5–25 cr/day',note:'Bonus scales with streak length'},
+  {ico:'🏆',lbl:'Unlock achievements',rate:'5–100 cr each',note:'One-time rewards, verified milestones only'},
+  {ico:'⭐',lbl:'Receive a 5-star review',rate:'+2 cr each',note:'Only after verified session completion'},
+  {ico:'🤝',lbl:'Affiliate referral',rate:'+10 cr base',note:'After referee completes their first session'},
+  {ico:'📅',lbl:'Daily challenges',rate:'+3–15 cr',note:'Fresh challenges every 24hrs at midnight UTC'},
+];
+
+const ACHIEVEMENTS = [
+  {ico:'🌱',name:'First Session',desc:'Complete your first session',cr:5,unlocked:false,new:false},
+  {ico:'🔥',name:'Week Warrior',desc:'7-day streak',cr:10,unlocked:false,new:false},
+  {ico:'🌍',name:'World Teacher',desc:'Serve users from 5 countries',cr:20,unlocked:false},
+  {ico:'💯',name:'Perfect Rating',desc:'Receive a 5-star review',cr:5,unlocked:false},
+  {ico:'🛡',name:'ID Verified',desc:'Complete full identity verification',cr:8,unlocked:false},
+  {ico:'⚡',name:'Quick Match',desc:'Book within 1hr of joining',cr:8,unlocked:false},
+  {ico:'🎓',name:'Path Graduate',desc:'Complete a full skill path',cr:25,unlocked:false},
+  {ico:'📹',name:'Creator',desc:'Upload your first teaching video',cr:10,unlocked:false},
+  {ico:'🤝',name:'Ambassador',desc:'Refer 3 active users',cr:30,unlocked:false},
+  {ico:'💎',name:'Diamond',desc:'Reach 300 credits earned total',cr:50,unlocked:false},
+  {ico:'🏆',name:'Legend',desc:'Top 10 global leaderboard',cr:100,unlocked:false},
+  {ico:'❤',name:'Community',desc:'100 positive reviews',cr:40,unlocked:false},
+  {ico:'🌐',name:'Polyglot',desc:'Exchange with 10 countries',cr:15,unlocked:false},
+  {ico:'⭐',name:'Quality First',desc:'Maintain 4.8+ rating over 20 sessions',cr:30,unlocked:false},
+  {ico:'🚀',name:'Rocket',desc:'10 sessions in first month',cr:20,unlocked:false},
+];
+
+const CHALLENGES = [
+  {ico:'📚',title:'Complete a session',desc:'Finish any booked session today',cr:15,done:false},
+  {ico:'⭐',title:'Leave a review',desc:'Review your last session honestly',cr:3,done:false},
+  {ico:'🔍',title:'Browse 3 listings',desc:'Explore potential services',cr:1,done:true},
+  {ico:'💬',title:'Message a provider',desc:'Send your first inquiry',cr:2,done:false},
+];
+
+const PATHS = [
+  {name:'Python → ML Engineer',ico:'🐍',desc:'From syntax to deployed models',steps:[{l:'Python basics',done:false,cr:10,current:true},{l:'Data analysis with Pandas',done:false,cr:15},{l:'Machine learning fundamentals',done:false,cr:20},{l:'Deep learning & neural nets',done:false,cr:30},{l:'Deploy to production',done:false,cr:40}],totalCr:115,progress:0},
+  {name:'Spanish Fluency',ico:'🇪🇸',desc:'A1 → B2 in conversational Spanish',steps:[{l:'Alphabet & basics',done:false,cr:5,current:true},{l:'Present tense conversations',done:false,cr:10},{l:'Past & future tenses',done:false,cr:10},{l:'Complex grammar',done:false,cr:15},{l:'Fluency certification',done:false,cr:25}],totalCr:65,progress:0},
+];
+
+const DISPUTE_PROCESS = [
+  {step:'1',title:'File dispute',desc:'Submit with evidence within 72hrs of session end'},
+  {step:'2',title:'Other party responds',desc:'They have 48hrs to submit their evidence'},
+  {step:'3',title:'AI pre-analysis',desc:'AI reviews both submissions, flags inconsistencies'},
+  {step:'4',title:'Human moderator',desc:'Qualified moderator reviews within 24hrs'},
+  {step:'5',title:'Decision',desc:'Credits released or refunded. Penalties applied if bad faith found'},
+];
+
+const PENALTIES = [
+  {offense:'Fake review',penalty:'50 cr fine + 30-day suspension','repeat':'Permanent ban'},
+  {offense:'No-show',penalty:'Session credits lost + warning','repeat':'Credit penalty scales'},
+  {offense:'Fraud / fake service',penalty:'Account frozen + 100 cr fine','repeat':'Permanent ban + legal referral'},
+  {offense:'Multiple accounts',penalty:'All accounts banned + credits forfeited','repeat':'Device-level block'},
+  {offense:'Review collusion',penalty:'Reviews removed + 50 cr each participant','repeat':'Account suspension'},
+  {offense:'False dispute',penalty:'50 cr fine','repeat':'Suspension'},
+];
+
+const DEMO_LISTINGS = [
+  {id:'d1',uid:'demo-u1',title:'Python for Data Science',cat:'tech',level:'advanced',price:42,duration:1,desc:'Build real data pipelines. Pandas, NumPy, visualisation. 10+ practical exercises included. You will leave knowing how to clean, analyse, and present data.',rating:4.9,reviews:23,sessions:31,verified:true,featured:true},
+  {id:'d2',uid:'demo-u2',title:'Conversational Spanish (B1+)',cat:'lang',level:'intermediate',price:22,duration:1,desc:'Natural conversation, cultural context, real-world vocabulary. No boring textbook drills. Session recorded for your review.',rating:4.8,reviews:17,sessions:24,verified:true,featured:false},
+  {id:'d3',uid:'demo-u3',title:'Brand Identity Design',cat:'creative',level:'advanced',price:38,duration:1.5,desc:'Full brand system from logo to style guide. Figma-based. You get all source files. Requires no design experience — I start from your vision.',rating:5.0,reviews:11,sessions:14,verified:true,featured:true},
+  {id:'d4',uid:'demo-u4',title:'Financial Modeling for Startups',cat:'business',level:'expert',price:55,duration:1,desc:'Investor-ready models. DCF, scenario planning, cap table basics. I have built 40+ models for funded startups. Come with your numbers.',rating:4.9,reviews:8,sessions:12,verified:true,featured:false},
+  {id:'d5',uid:'demo-u5',title:'Algorithms & System Design',cat:'tech',level:'expert',price:65,duration:2,desc:'FAANG interview prep. LeetCode patterns, Big-O analysis, distributed systems design. 92% of my students land offers.',rating:4.9,reviews:31,sessions:45,verified:true,featured:false},
+  {id:'d6',uid:'demo-u6',title:'Cinematic Video Editing',cat:'creative',level:'intermediate',price:30,duration:1.5,desc:'DaVinci Resolve from scratch. Colour grading, audio mix, pacing. You will export a polished 3-minute video during our session.',rating:4.7,reviews:9,sessions:11,verified:false,featured:false},
+];
+
+const DEMO_USERS = {
+  'demo-u1':{name:'Priya S.',init:'PS',bg:'#1A0818',fg:'#C870B0',loc:'Bangalore, India',trust:91},
+  'demo-u2':{name:'Sofia M.',init:'SM',bg:'#2A1808',fg:'#D09050',loc:'Buenos Aires, Argentina',trust:88},
+  'demo-u3':{name:'Mei L.',init:'ML',bg:'#100C20',fg:'#9070D0',loc:'Taipei, Taiwan',trust:95},
+  'demo-u4':{name:'Ravi P.',init:'RP',bg:'#180808',fg:'#D06050',loc:'Mumbai, India',trust:82},
+  'demo-u5':{name:'Yuki T.',init:'YT',bg:'#080C18',fg:'#5078D0',loc:'Accra, Ghana',trust:94},
+  'demo-u6':{name:'Julia W.',init:'JW',bg:'#080C14',fg:'#6090C0',loc:'Berlin, Germany',trust:79},
+};
+
+const LB_DEMO = [
+  {init:'PS',bg:'#1A0818',fg:'#C870B0',name:'Priya S.',loc:'Bangalore',cr:847,sess:71,trust:91,streak:23},
+  {init:'ML',bg:'#100C20',fg:'#9070D0',name:'Mei L.',loc:'Taipei',cr:723,sess:61,trust:95,streak:31},
+  {init:'YT',bg:'#080C18',fg:'#5078D0',name:'Yuki T.',loc:'Accra',cr:612,sess:45,trust:94,streak:19},
+  {init:'SM',bg:'#2A1808',fg:'#D09050',name:'Sofia M.',loc:'Buenos Aires',cr:541,sess:52,trust:88,streak:12},
+  {init:'RP',bg:'#180808',fg:'#D06050',name:'Ravi P.',loc:'Mumbai',cr:288,sess:27,trust:82,streak:8},
+];
+
+// ══════════════════════════════════════════════════════════════════
+// LANDING
+// ══════════════════════════════════════════════════════════════════
+let regStep=1;
+function switchLTab(t){
+  ['a','b'].forEach(x=>{document.getElementById('lt-'+x).classList.remove('act')});
+  document.getElementById('lt-'+(t==='login'?'a':'b')).classList.add('act');
+  document.getElementById('lf-login').style.display=t==='login'?'':'none';
+  document.getElementById('lf-reg').style.display=t==='register'?'':'none';
+}
+function rs(n){
+  document.getElementById('rs'+regStep).classList.remove('act');
+  regStep=n;
+  document.getElementById('rs'+n).classList.add('act');
+  document.querySelectorAll('.sdot').forEach((d,i)=>d.classList.toggle('on',i<n));
+}
+
+function doLogin(){
+  const isDemo=document.getElementById('load-demo')?.checked!==false;
+  S.isDemo=isDemo;
+  if(isDemo){
+    S.uid='user-demo';
+    S.credits=47;
+    S.streak=7;
+    S.earnedThisMonth=77;
+    S.spentThisMonth=30;
+    S.burnedTotal=6;
+    S.trustScore=72;
+    S.verifications={phone:true,email:true,id:false,skills:false};
+    S.affiliateCode='AMARA-7F3K';
+    S.affiliateReferrals=3;
+    S.affiliateEarned=30;
+    S.dailyEarned=0;
+    DB.listings=[...DEMO_LISTINGS];
+    S.transactions=[
+      {ico:'▲',lbl:'Python session — Priya S.',date:'Today',cr:+40,pos:true},
+      {ico:'✓',lbl:'Escrow released — ESC-00123',date:'Today',cr:-2,pos:false},
+      {ico:'🔥',lbl:'7-day streak bonus',date:'Yesterday',cr:+5,pos:true},
+      {ico:'◈',lbl:'Bought 50 credits',date:'Mar 30',cr:+50,pos:true},
+      {ico:'▲',lbl:'Brand design — Mei L.',date:'Mar 28',cr:+35,pos:true},
+      {ico:'⭐',lbl:'5-star review bonus',date:'Mar 28',cr:+2,pos:true},
+      {ico:'▼',lbl:'Bought: Financial Modeling session',date:'Mar 27',cr:-55,pos:false},
+      {ico:'🤝',lbl:'Affiliate — Sofia M. joined',date:'Mar 26',cr:+10,pos:true},
+    ];
+    S.notifs=[
+      {ico:'🌍',title:'New booking request','body':'Priya S. wants to book your Python session for Apr 2','time':'2h ago'},
+      {ico:'⭐',title:'New 5-star review','body':'Sofia M. left you ★★★★★ for your React session','time':'5h ago'},
+      {ico:'🔒',title:'Escrow released','body':'ESC-00123 completed — 38 cr released to you','time':'1d ago'},
+    ];
+    S.inventory=[
+      {id:'inv-1',ico:'🎓',name:'Financial Modeling Session',type:'session',rarity:'rare',desc:'1hr with Ravi P. Pre-paid and escrow confirmed.',cost:55,purchasedAt:'Mar 27',used:false,expiresAt:'Apr 27'},
+      {id:'inv-2',ico:'🏆',name:'Week Warrior Achievement',type:'achievement',rarity:'epic',desc:'Earned for completing a 7-day streak.',cost:0,purchasedAt:'Today',used:false,expiresAt:'Never'},
+    ];
+    // User's own listing
+    S.listings=[
+      {id:'my-1',title:'Python for beginners',cat:'tech',level:'intermediate',price:25,duration:1,desc:'Clear and practical Python for complete beginners. 5 exercises, live coding, Q&A included.',status:'active',bookings:7,rating:4.8,earned:175}
+    ];
+    S.sessions=[
+      {id:'s1',type:'teaching',with:'Priya S.',skill:'Python fundamentals',time:'Today 14:00',status:'confirmed',escrowId:'ESC-00124',cr:40},
+      {id:'s2',type:'learning',with:'Ravi P.',skill:'Financial Modeling',time:'Apr 2, 10:00',status:'pending',escrowId:'ESC-00125',cr:-55},
+      {id:'s3',type:'teaching',with:'Sofia M.',skill:'React hooks',time:'Mar 28',status:'completed',escrowId:'ESC-00122',cr:38,reviewed:true},
+    ];
+    document.getElementById('sb-av').textContent='AK';
+    document.getElementById('sb-un').textContent='Amara K.';
+    document.getElementById('sb-ul').textContent='⭐ Level 8 · Advanced';
+    toast('👋','Welcome back, Amara!','7-day streak 🔥 · 3 notifications · 1 session today');
+  } else {
+    S.uid='user-new';S.credits=0;S.streak=0;S.earnedThisMonth=0;S.spentThisMonth=0;S.dailyEarned=0;S.trustScore=0;S.inventory=[];S.listings=[];S.sessions=[];S.transactions=[];S.notifs=[];DB.listings=[...DEMO_LISTINGS];S.affiliateCode=randomCode();
+    document.getElementById('sb-av').textContent='ME';document.getElementById('sb-un').textContent='You';document.getElementById('sb-ul').textContent='New user';
+    toast('👋','Welcome!','Start by creating your first service listing to earn credits.');
+  }
+  document.getElementById('landing').style.display='none';
+  document.getElementById('app').style.display='flex';
+  initApp();
+}
+
+function doRegister(){
+  if(!document.getElementById('agree-rules').checked){toast('⚠','Agree to rules','Please read and agree to the platform rules first.');return;}
+  const fn=document.getElementById('rfn').value||'User';
+  S.uid='user-'+Date.now();S.credits=0;S.streak=0;S.inventory=[];S.listings=[];S.sessions=[];S.transactions=[];S.notifs=[];S.earnedThisMonth=0;S.spentThisMonth=0;S.dailyEarned=0;S.trustScore=10;S.affiliateCode=randomCode();DB.listings=[...DEMO_LISTINGS];
+  document.getElementById('sb-av').textContent=fn.slice(0,2).toUpperCase();document.getElementById('sb-un').textContent=fn;document.getElementById('sb-ul').textContent='⭐ New · Unverified';
+  document.getElementById('landing').style.display='none';document.getElementById('app').style.display='flex';
+  initApp();
+  toast('🎉','Account created!','5 credit bonus unlocks after your first completed session. Start by creating a listing!');
+}
+
+function doLogout(){document.getElementById('app').style.display='none';document.getElementById('landing').style.display='flex';}
+function randomCode(){return 'SB-'+(Math.random().toString(36).slice(2,6).toUpperCase())+'-'+(Math.random().toString(36).slice(2,6).toUpperCase());}
+
+// ══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════
+function nav(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.si').forEach(i=>i.classList.remove('act'));
+  const page=document.getElementById('page-'+id);
+  if(page)page.classList.add('act');
+  if(el)el.classList.add('act');
+  else document.querySelectorAll('.si').forEach(i=>{if(i.getAttribute('onclick')&&i.getAttribute('onclick').includes("'"+id+"'"))i.classList.add('act')});
+  document.getElementById('content').scrollTop=0;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════
+function initApp(){
+  updateSidebar();
+  renderDashboard();
+  renderMarket();
+  renderMyListings();
+  renderSessions();
+  renderEscrow();
+  renderDisputes();
+  renderWallet();
+  renderInv();
+  renderAffiliate();
+  renderTrust();
+  renderAchievements();
+  renderLB();
+  renderPaths();
+  renderTutorial();
+  renderArchitecture();
+  renderProfile();
+  document.getElementById('ndot').style.display=S.notifs.length?'block':'none';
+  startNotifLoop();
+}
+
+function updateSidebar(){
+  document.getElementById('sb-bal').textContent=S.credits;
+  document.getElementById('sb-usd').textContent='≈ $'+(S.credits*.1).toFixed(2);
+  document.getElementById('sb-fill').style.width=Math.min(100,(S.credits/200)*100)+'%';
+  document.getElementById('sb-str').textContent=S.streak;
+  document.getElementById('inv-cnt').textContent=S.inventory.filter(i=>!i.used).length;
+  document.getElementById('wal-bal').textContent=S.credits;
+  document.getElementById('wal-usd').textContent='$'+(S.credits*.1).toFixed(2);
+  document.getElementById('wal-earn').textContent=S.earnedThisMonth;
+  document.getElementById('wal-spent').textContent=S.spentThisMonth;
+  document.getElementById('wal-burned').textContent=S.burnedTotal;
+  document.getElementById('mkt-bal-disp').textContent=S.credits+' cr';
+  document.getElementById('daily-remain').textContent=(S.dailyLimit-S.dailyEarned)+' cr left';
+  document.getElementById('daily-lim').textContent=(S.dailyLimit-S.dailyEarned)+' cr remaining';
+  // trust arc
+  const r=24,c=2*Math.PI*r,arc=c*(S.trustScore/100);
+  const a=document.getElementById('trust-arc');
+  if(a){a.setAttribute('stroke-dasharray',arc+' '+c);}
+  document.getElementById('trust-score-disp').textContent=S.trustScore;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SEARCH
+// ══════════════════════════════════════════════════════════════════
+function doSearch(q){
+  const dr=document.getElementById('sdp');
+  if(!q.trim()){dr.classList.remove('open');return;}
+  const ql=q.toLowerCase();
+  const lm=DB.listings.filter(l=>l.title.toLowerCase().includes(ql)||l.cat.includes(ql)||l.desc.toLowerCase().includes(ql));
+  dr.innerHTML='';
+  if(lm.length){
+    dr.innerHTML+='<div style="font-size:9px;color:var(--t3);padding:3px 7px;text-transform:uppercase;letter-spacing:.1em">Services</div>';
+    lm.slice(0,6).forEach(l=>{
+      const u=DEMO_USERS[l.uid]||{init:'?',bg:'var(--bg4)',fg:'var(--t2)',name:'Unknown'};
+      dr.innerHTML+=`<div class="sdr-item" onclick="openBooking('${l.id}')"><div class="ava ava-sm" style="background:${u.bg};color:${u.fg}">${u.init}</div><div style="flex:1"><div style="font-size:11px;font-weight:500">${l.title}</div><div style="font-size:9px;color:var(--t3)">${l.price} cr/hr · ${l.cat}</div></div><span class="cr-val" style="font-size:10px">${l.price}cr</span></div>`;
+    });
+  }
+  if(!lm.length) dr.innerHTML='<div style="padding:10px;font-size:11px;color:var(--t3);text-align:center">No services found for "'+q+'"</div>';
+  dr.classList.add('open');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════════════
+function renderDashboard(){
+  const newUser=S.credits===0&&S.sessions.length===0;
+  document.getElementById('dash-h1').textContent=S.isDemo?'Good morning, Amara ✦':'Welcome to SkillBridge';
+  document.getElementById('dash-sub').textContent=S.isDemo?'7-day streak 🔥 · 1 session today · '+S.notifs.length+' notifications':'Your knowledge economy starts here';
+  document.getElementById('new-user-banner').style.display=newUser?'block':'none';
+  document.getElementById('daily-chal-btn').querySelector('#dc-title').textContent='Complete a session';
+
+  // stats
+  document.getElementById('dash-stats').innerHTML=[
+    {ico:'◈',bg:'var(--goldbg)',v:S.credits,l:'SkillCredits',s:'≈ $'+(S.credits*.1).toFixed(2)+' USD'},
+    {ico:'🔥',bg:'var(--terbg)',v:S.streak,l:'Day streak',s:'Next bonus at 10 days'},
+    {ico:'▲',bg:'var(--grnbg)',v:S.earnedThisMonth,l:'Earned this month',s:'Daily limit: '+(S.dailyLimit-S.dailyEarned)+' cr left'},
+    {ico:'🛡',bg:'var(--purpbg)',v:S.trustScore,l:'Trust score',s:S.trustScore<50?'⚠ Complete verification':'✓ In good standing'},
+  ].map(s=>`<div class="stat"><div class="stat-ico" style="background:${s.bg}">${s.ico}</div><div class="stat-v mono">${s.v}</div><div class="stat-l">${s.l}</div><div class="stat-s ${s.v>0?'up':'neu'}">${s.s}</div></div>`).join('');
+
+  // onboarding steps
+  const osteps=[
+    {done:S.verifications.email,t:'Verify email address',cta:"nav('trust')",cr:0},
+    {done:S.verifications.phone,t:'Verify phone number',cta:"nav('trust')",cr:0},
+    {done:S.listings.length>0||DB.listings.some(l=>l.uid===S.uid),t:'Create your first service listing',cta:'openCreateListing()',cr:0},
+    {done:S.sessions.some(s=>s.status==='completed'),t:'Complete your first session',cta:"nav('sessions')",cr:5},
+  ];
+  document.getElementById('onboard-steps').innerHTML=osteps.map(s=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+      <div style="width:18px;height:18px;border-radius:50%;border:1.5px solid ${s.done?'var(--green2)':'var(--border)'};background:${s.done?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0">${s.done?'✓':''}</div>
+      <div style="flex:1;font-size:11px;${s.done?'text-decoration:line-through;color:var(--t3)':''}">${s.t}</div>
+      ${s.cr?`<span class="cr-val" style="font-size:10px">+${s.cr} cr</span>`:''}
+      ${!s.done?`<button class="btn btn-ghost" style="padding:3px 8px;font-size:9px" onclick="${s.cta}">Do it →</button>`:''}
+    </div>`).join('');
+
+  // active listings preview
+  const visListings=DB.listings.filter(l=>l.uid!==S.uid).slice(0,3);
+  document.getElementById('dash-listings').innerHTML=visListings.length?visListings.map(l=>{
+    const u=DEMO_USERS[l.uid]||{init:'?',bg:'var(--bg4)',fg:'var(--t2)',name:'Provider'};
+    return `<div class="row" style="cursor:pointer" onclick="openBooking('${l.id}')">
+      <div class="ava ava-md" style="background:${u.bg};color:${u.fg}">${u.init}</div>
+      <div style="flex:1"><div style="font-size:11px;font-weight:500">${l.title}</div><div style="font-size:9px;color:var(--t3)">${u.name} · ${l.price} cr/hr</div></div>
+      <span class="tag ${l.verified?'tag-teach':''}" style="${!l.verified?'background:var(--goldbg);color:var(--gold)':''}">${l.verified?'Verified':'Pending'}</span>
+    </div>`;
+  }).join(''):'<div style="color:var(--t3);font-size:11px;padding:14px 0;text-align:center">No active listings yet — <a href="#" onclick="openCreateListing()" style="color:var(--terra)">create the first one</a></div>';
+
+  // sessions
+  const sess=S.sessions.slice(0,3);
+  document.getElementById('dash-sessions').innerHTML=sess.length?sess.map(s=>`
+    <div class="row">
+      <div style="font-size:9px;color:var(--t3);min-width:72px;font-family:'DM Mono',monospace">${s.time}</div>
+      <div style="flex:1"><div style="font-size:11px;font-weight:500">${s.with}</div><div style="font-size:9px;color:var(--t3)">${s.skill}</div></div>
+      <span class="tag ${s.status==='completed'?'tag-teach':s.status==='confirmed'?'tag-blue':''}" style="${s.status==='pending'?'background:var(--goldbg);color:var(--gold)':''}">${s.status}</span>
+    </div>`).join(''):'<div style="color:var(--t3);font-size:11px;padding:14px 0;text-align:center">No sessions yet. Browse services to book your first.</div>';
+
+  // live rates
+  document.getElementById('dash-rates').innerHTML=RATES.slice(0,5).map(r=>`
+    <div class="row fb"><span style="font-size:11px">${r.skill}</span><div class="fg"><span style="color:${r.col};font-weight:700;font-size:10px">${r.trend}</span><span class="mono cr-val" style="font-size:11px;color:${r.col}">${r.rate}cr</span></div></div>`).join('');
+
+  // platform health
+  document.getElementById('dash-health').innerHTML=[
+    {lbl:'Active listings',v:DB.listings.length,max:20},
+    {lbl:'Active users online',v:142,max:500},
+    {lbl:'Avg session completion',v:'94%',isStr:true},
+    {lbl:'Dispute rate',v:'0.8%',isStr:true,good:true},
+    {lbl:'Median time to booking',v:'23 min',isStr:true},
+  ].map(h=>`<div class="row fb"><span style="font-size:11px">${h.lbl}</span><span class="mono" style="font-size:11px;color:var(--green2)">${h.v}</span></div>`).join('');
+
+  // activity
+  document.getElementById('dash-act').innerHTML=(S.transactions.slice(0,5).map(t=>`
+    <div class="row"><div style="font-size:15px;flex-shrink:0">${t.ico}</div><div style="flex:1"><div style="font-size:11px">${t.lbl}</div><div style="font-size:9px;color:var(--t3)">${t.date}</div></div><span class="mono" style="font-weight:700;color:${t.pos?'var(--green2)':'var(--terra)'};font-size:11px">${t.cr>0?'+':''}${t.cr}</span></div>`).join(''))||'<div style="color:var(--t3);font-size:11px;padding:14px 0;text-align:center">No activity yet</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// MARKETPLACE
+// ══════════════════════════════════════════════════════════════════
+function renderMarket(){
+  const cat=document.getElementById('mkt-cat').value;
+  const sort=document.getElementById('mkt-sort').value;
+  let list=[...DB.listings].filter(l=>l.uid!==S.uid);
+  if(cat) list=list.filter(l=>l.cat===cat);
+  if(sort==='Lowest price') list.sort((a,b)=>a.price-b.price);
+  else if(sort==='Highest rated') list.sort((a,b)=>(b.rating||0)-(a.rating||0));
+  else if(sort==='Newest') list.reverse();
+
+  const grid=document.getElementById('mkt-grid');
+  const empty=document.getElementById('mkt-empty');
+  if(!list.length){grid.style.display='none';empty.style.display='block';return;}
+  grid.style.display='grid';empty.style.display='none';
+  grid.innerHTML=list.map(l=>{
+    const u=DEMO_USERS[l.uid]||{init:l.uid?l.uid.slice(0,2).toUpperCase():'?',bg:'var(--bg4)',fg:'var(--t2)',name:'User'};
+    const canAfford=S.credits>=l.price;
+    const totalCr=Math.round(l.price*l.duration);
+    return `<div class="lcard${l.featured?' featured':''}" style="position:relative" onclick="openBooking('${l.id}')">
+      ${l.featured?'<div class="feat-badge">⭐ Featured</div>':''}
+      <div class="lcard-instr">
+        <div class="ava ava-md" style="background:${u.bg};color:${u.fg}">${u.init}</div>
+        <div><div style="font-size:11px;font-weight:500">${u.name}</div><div style="font-size:9px;color:var(--t3)">${u.loc||''} ${l.verified?'· <span style="color:var(--green2)">✓ Verified</span>':''}</div></div>
+      </div>
+      <div class="lcard-title">${l.title}</div>
+      <div class="lcard-sub">${l.desc.slice(0,100)}...</div>
+      <div class="lcard-meta">
+        <span class="tag tag-blue">${l.duration}hr</span>
+        <span class="tag" style="background:var(--bg4);color:var(--t3)">${l.sessions||0} sessions</span>
+        ${l.verified?'<span class="tag tag-teach">✓ Skill verified</span>':'<span class="tag" style="background:var(--goldbg);color:var(--gold)">Pending verify</span>'}
+        <span class="tag tag-purple">🔒 Escrow</span>
+      </div>
+      <div class="lcard-foot">
+        <div>
+          <div class="lcard-price">${totalCr} cr</div>
+          <div class="lcard-usd">≈ $${(totalCr*.1).toFixed(2)} · ${l.price}cr/hr</div>
+        </div>
+        <div style="text-align:right">
+          ${l.rating?`<div style="font-size:10px;color:var(--gold)">★ ${l.rating} <span style="color:var(--t3)">(${l.reviews})</span></div>`:'<div style="font-size:9px;color:var(--t3)">No reviews yet</div>'}
+          <button class="btn ${canAfford?'btn-pri':'btn-ghost'}" style="margin-top:5px;padding:5px 12px;font-size:10px" onclick="event.stopPropagation();openBooking('${l.id}')">${canAfford?'Book for '+totalCr+' cr':'Need '+totalCr+' cr'}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LISTINGS
+// ══════════════════════════════════════════════════════════════════
+function openCreateListing(){document.getElementById('create-listing-modal').classList.add('open');}
+function suggestPrice(){
+  const v=parseInt(document.getElementById('lst-level').value);
+  const sug={10:'10–15',20:'20–30',35:'35–50',60:'60–100'}[v]||'35';
+  document.getElementById('price-suggest').textContent='AI suggests: '+sug+' cr/hr';
+  document.getElementById('lst-price').value=v;
+}
+function createListing(){
+  const title=document.getElementById('lst-title').value.trim();
+  const desc=document.getElementById('lst-desc').value.trim();
+  if(!title){toast('⚠','Title required','Give your service a clear title.');return;}
+  if(desc.length<60){toast('⚠','Description too short','Minimum 60 characters. Describe exactly what you deliver.');return;}
+  const price=parseInt(document.getElementById('lst-price').value)||35;
+  const dur=parseFloat(document.getElementById('lst-dur').value)||1;
+  const cat=document.getElementById('lst-cat').value;
+  const listing={id:'my-'+Date.now(),uid:S.uid,title,cat,level:document.getElementById('lst-level').value,price,duration:dur,desc,rating:null,reviews:0,sessions:0,verified:false,featured:false,status:'pending'};
+  DB.listings.push(listing);
+  S.listings.push({...listing,bookings:0,earned:0});
+  document.getElementById('create-listing-modal').classList.remove('open');
+  renderMyListings();
+  renderMarket();
+  renderDashboard();
+  toast('✓','Listing submitted!','Under review — typically approved within 2hrs by AI + human moderator.');
+}
+function renderMyListings(){
+  const all=[...S.listings];
+  const grid=document.getElementById('my-listings-grid');
+  const empty=document.getElementById('my-listings-empty');
+  if(!all.length){grid.style.display='none';empty.style.display='block';return;}
+  grid.style.display='grid';empty.style.display='none';
+  grid.innerHTML=all.map(l=>`
+    <div class="card">
+      <div class="fb" style="margin-bottom:10px">
+        <div style="font-size:13px;font-weight:600">${l.title}</div>
+        <span class="tag ${l.status==='active'?'tag-teach':''}" style="${l.status==='pending'?'background:var(--goldbg);color:var(--gold)':''}">${l.status}</span>
+      </div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:10px">${l.desc.slice(0,80)}...</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+        <span class="tag tag-blue">${l.duration}hr</span>
+        <span class="tag tag-gold">${l.price} cr/hr</span>
+        <span class="tag" style="background:var(--bg4);color:var(--t3)">${l.bookings||0} bookings</span>
+      </div>
+      <div class="fb" style="padding-top:10px;border-top:1px solid var(--border)">
+        <div><div class="cr-val mono" style="font-size:16px">+${l.earned||0} cr</div><div style="font-size:9px;color:var(--t3)">earned total</div></div>
+        <div style="display:flex;gap:5px">
+          <button class="btn btn-ghost" style="padding:4px 9px;font-size:9px" onclick="toast('✏','Edit listing','Editing coming soon — contact support@skillbridge.io')">Edit</button>
+          <button class="btn btn-red" style="padding:4px 9px;font-size:9px" onclick="pauseListing('${l.id}')">Pause</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function pauseListing(id){S.listings=S.listings.filter(l=>l.id!==id);DB.listings=DB.listings.filter(l=>l.id!==id);renderMyListings();renderMarket();toast('⏸','Listing paused','Your service is hidden from marketplace.');}
+
+// ══════════════════════════════════════════════════════════════════
+// BOOKING
+// ══════════════════════════════════════════════════════════════════
+function openBooking(lid){
+  const l=DB.listings.find(x=>x.id===lid);
+  if(!l){toast('⚠','Not found','This listing is no longer available.');return;}
+  const u=DEMO_USERS[l.uid]||{init:'?',bg:'var(--bg4)',fg:'var(--t2)',name:'Provider',loc:'',trust:0};
+  const totalCr=Math.round(l.price*l.duration);
+  const fee=Math.max(1,Math.round(totalCr*.05));
+  const net=totalCr-fee;
+  const canAfford=S.credits>=totalCr;
+  document.getElementById('booking-modal-content').innerHTML=`
+    <div class="modal-title">${l.title}</div>
+    <div class="modal-sub">Review booking details before confirming</div>
+    <div class="fg" style="margin-bottom:16px;align-items:flex-start;background:var(--bg3);border-radius:var(--rl);padding:12px">
+      <div class="ava ava-lg" style="background:${u.bg};color:${u.fg}">${u.init}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${u.name}</div><div style="font-size:10px;color:var(--t3)">${u.loc} · Trust score: ${u.trust}/100</div><div style="font-size:10px;color:var(--t3)">${l.rating?'★ '+l.rating+' ('+l.reviews+' reviews)':'No reviews yet'}</div></div>
+      ${l.verified?'<span class="tag tag-teach">✓ Verified</span>':'<span class="tag tag-gold">Unverified</span>'}
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--rl);padding:12px;margin-bottom:14px">
+      <div style="font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:10px">${l.desc}</div>
+    </div>
+    <div class="escrow-card" style="margin-bottom:14px">
+      <div style="font-size:11px;font-weight:600;color:var(--gold);margin-bottom:6px">🔒 Escrow protection</div>
+      <div style="font-size:10px;color:var(--t2);margin-bottom:10px">Your credits are held in escrow until you confirm the session is complete. If the provider doesn't deliver, you get a full refund.</div>
+      <div class="fb" style="font-size:11px;margin-bottom:4px"><span>Service cost:</span><span class="cr-val">${totalCr} cr</span></div>
+      <div class="fb" style="font-size:11px;margin-bottom:4px"><span>Platform fee (burned):</span><span style="color:var(--t3)">-${fee} cr (5%)</span></div>
+      <div class="fb" style="font-size:11px;font-weight:600;padding-top:8px;border-top:1px solid var(--goldbd)"><span>Provider receives:</span><span style="color:var(--green2)">${net} cr</span></div>
+    </div>
+    <div style="background:${canAfford?'var(--grnbg)':'var(--redbg)'};border:1px solid ${canAfford?'var(--grnbd)':'var(--redbd)'};border-radius:var(--r);padding:9px;margin-bottom:12px;font-size:11px;color:${canAfford?'var(--green2)':'var(--red)'}">
+      ${canAfford?'✓ You have '+S.credits+' credits — enough to book':'⚠ You need '+totalCr+' cr but have only '+S.credits+' cr. Buy more to proceed.'}
+    </div>
+    ${canAfford
+      ?`<button class="btn btn-pri btn-full btn-lg" onclick="confirmBooking('${l.id}',${totalCr},${fee})">Confirm booking — ${totalCr} cr into escrow →</button>`
+      :`<div class="g2"><button class="btn btn-gold btn-full" onclick="openBuyModal();document.getElementById('booking-modal').classList.remove('open')">Buy credits</button><button class="btn btn-ghost btn-full" onclick="document.getElementById('booking-modal').classList.remove('open')">Cancel</button></div>`
+    }
+    <p style="font-size:9px;color:var(--t3);text-align:center;margin-top:8px">Credits held in escrow · Released on both parties' confirmation · Dispute available for 72hrs after</p>`;
+  document.getElementById('booking-modal').classList.add('open');
+}
+
+function confirmBooking(lid,totalCr,fee){
+  const l=DB.listings.find(x=>x.id===lid);
+  if(!l||S.credits<totalCr){return;}
+  S.credits-=totalCr;
+  S.spentThisMonth+=totalCr;
+  const escId='ESC-'+Math.floor(Math.random()*90000+10000);
+  const invItem={id:'inv-'+Date.now(),ico:'🎓',name:l.title,type:'session',rarity:'rare',desc:'Booked session. Confirm completion to release credits to provider.',cost:totalCr,purchasedAt:'Just now',used:false,expiresAt:'30 days',escrowId:escId,lid};
+  S.inventory.push(invItem);
+  S.transactions.unshift({ico:'🔒',lbl:'Escrow locked — '+l.title,date:'Just now',cr:-totalCr,pos:false});
+  S.sessions.push({id:'s'+Date.now(),type:'learning',with:DEMO_USERS[l.uid]?.name||'Provider',skill:l.title,time:'To be scheduled',status:'confirmed',escrowId:escId,cr:-totalCr});
+  S.notifs.unshift({ico:'🔒',title:'Booking confirmed',body:'Escrow ID: '+escId+' · Credits held until completion',time:'Just now'});
+  document.getElementById('booking-modal').classList.remove('open');
+  updateSidebar();
+  spawnCrPop('-'+totalCr+' cr');
+  renderDashboard();
+  renderInv();
+  renderSessions();
+  toast('✓','Booked!',l.title+' · '+escId+' · Credits in escrow. Contact provider to schedule.');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SESSIONS
+// ══════════════════════════════════════════════════════════════════
+function renderSessions(){
+  const active=S.sessions.filter(s=>s.status!=='completed');
+  const done=S.sessions.filter(s=>s.status==='completed');
+  document.getElementById('active-sessions').innerHTML=active.length?active.map(s=>`
+    <div class="card-sm" style="margin-bottom:8px">
+      <div class="fb" style="margin-bottom:7px">
+        <div style="font-size:12px;font-weight:500">${s.with} — ${s.skill}</div>
+        <span class="tag ${s.status==='confirmed'?'tag-blue':''}" style="${s.status==='pending'?'background:var(--goldbg);color:var(--gold)':''}">${s.status}</span>
+      </div>
+      <div style="font-size:10px;color:var(--t3);margin-bottom:9px">📅 ${s.time} · 🔒 ${s.escrowId} · ${s.cr<0?'-':'+'}${Math.abs(s.cr)} cr</div>
+      <div style="display:flex;gap:6px">
+        ${s.status==='confirmed'?`<button class="btn btn-green" style="padding:4px 10px;font-size:10px" onclick="completeSession('${s.id}')">✓ Confirm complete</button>`:''}
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:10px" onclick="nav('disputes')">⚖ Dispute</button>
+      </div>
+    </div>`).join(''):'<div class="empty"><div class="empty-ico">📅</div><div style="font-size:11px">No active sessions</div></div>';
+
+  document.getElementById('completed-sessions').innerHTML=done.length?done.map(s=>`
+    <div class="card-sm" style="margin-bottom:8px;border-color:var(--grnbd)">
+      <div class="fb" style="margin-bottom:5px">
+        <div style="font-size:11px;font-weight:500">${s.with} — ${s.skill}</div>
+        <span class="tag tag-teach">Done</span>
+      </div>
+      <div style="font-size:9px;color:var(--t3)">📅 ${s.time} · ${s.cr>0?'+':'-'}${Math.abs(s.cr)} cr</div>
+      ${!s.reviewed?`<button class="btn btn-ghost" style="padding:3px 8px;font-size:9px;margin-top:6px" onclick="openReview('${s.id}')">Leave review</button>`:'<div style="font-size:9px;color:var(--green2);margin-top:4px">✓ Reviewed</div>'}
+    </div>`).join(''):'<div style="color:var(--t3);font-size:11px;padding:10px 0;text-align:center">No completed sessions yet</div>';
+}
+
+function completeSession(sid){
+  const sess=S.sessions.find(s=>s.id===sid);
+  if(!sess)return;
+  sess.status='completed';
+  const invItem=S.inventory.find(i=>i.escrowId===sess.escrowId);
+  if(invItem) invItem.used=true;
+  // if teaching, earn credits
+  if(sess.cr>0){
+    const earn=Math.round(Math.abs(sess.cr)*.95);
+    const fee=Math.abs(sess.cr)-earn;
+    S.credits+=earn;S.earnedThisMonth+=earn;S.burnedTotal+=fee;S.dailyEarned+=earn;
+    S.transactions.unshift({ico:'✓',lbl:'Escrow released — '+sess.escrowId,date:'Just now',cr:earn,pos:true});
+    spawnCrPop('+'+earn+' cr');
+  }
+  updateSidebar();
+  renderSessions();
+  renderDashboard();
+  renderInv();
+  toast('✓','Session complete!','Escrow released · '+sess.with+' · Leave a review to earn +2 cr');
+}
+
+function openReview(sid){
+  const sess=S.sessions.find(s=>s.id===sid);
+  if(!sess)return;
+  const r=Math.floor(Math.random()*2)+4;
+  sess.reviewed=true;
+  S.credits+=2;S.earnedThisMonth+=2;
+  S.transactions.unshift({ico:'⭐',lbl:'Review bonus — '+sess.with,date:'Just now',cr:2,pos:true});
+  spawnCrPop('+2 cr');
+  updateSidebar();
+  renderSessions();
+  toast('⭐','Review submitted! +2 cr','Thanks for keeping SkillBridge honest.');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ESCROW
+// ══════════════════════════════════════════════════════════════════
+function renderEscrow(){
+  // flow steps
+  const steps=['Buyer locks credits','Provider delivers','Both confirm','Credits released','Fee burned'];
+  document.getElementById('esc-flow-steps').innerHTML=steps.map((_,i)=>`<div class="esc-step ${i<3?'active':''}"></div>`).join('<div style="width:6px;height:4px;background:var(--bg5);border-radius:1px"></div>');
+  document.getElementById('esc-flow-labels').innerHTML=steps.map(s=>`<div style="font-size:9px;color:var(--t3);text-align:center">${s}</div>`).join('');
+
+  // active escrows from sessions
+  const active=S.sessions.filter(s=>s.status!=='completed');
+  document.getElementById('active-escrows').innerHTML=active.length?active.map(s=>`
+    <div class="escrow-card" style="margin-bottom:10px">
+      <div class="fb" style="margin-bottom:7px">
+        <div style="font-size:12px;font-weight:600">${s.escrowId}</div>
+        <span class="tag tag-esc">Held</span>
+      </div>
+      <div style="font-size:11px;margin-bottom:7px">${s.skill} — with ${s.with}</div>
+      <div class="fb" style="font-size:10px;color:var(--t3)"><span>${s.time}</span><span class="cr-val">${Math.abs(s.cr)} cr</span></div>
+      <div style="display:flex;gap:6px;margin-top:9px">
+        <button class="btn btn-green" style="flex:1;justify-content:center;padding:5px;font-size:10px" onclick="completeSession('${s.id}')">✓ Confirm done</button>
+        <button class="btn btn-red" style="padding:5px 10px;font-size:10px" onclick="nav('disputes')">⚖ Dispute</button>
+      </div>
+    </div>`).join(''):'<div class="empty"><div class="empty-ico">🔒</div><div style="font-size:11px">No active escrows</div></div>';
+
+  document.getElementById('escrow-history').innerHTML=S.transactions.filter(t=>t.lbl.includes('Escrow')||t.lbl.includes('released')).map(t=>`
+    <div class="row"><span style="font-size:13px">${t.ico}</span><div style="flex:1"><div style="font-size:11px">${t.lbl}</div><div style="font-size:9px;color:var(--t3)">${t.date}</div></div><span class="mono ${t.pos?'up':'dn'}" style="font-size:11px">${t.cr>0?'+':''}${t.cr}</span></div>`).join('')||'<div style="color:var(--t3);font-size:11px;padding:10px 0">No history yet</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DISPUTES
+// ══════════════════════════════════════════════════════════════════
+function renderDisputes(){
+  document.getElementById('open-disputes').innerHTML='<div class="empty"><div class="empty-ico">⚖</div><div style="font-size:11px;margin-bottom:4px">No open disputes</div><div style="font-size:10px;color:var(--t3)">All your sessions are in good standing</div></div>';
+  document.getElementById('dispute-process').innerHTML=DISPUTE_PROCESS.map(d=>`
+    <div class="tut-step">
+      <div class="tut-num" style="width:26px;height:26px;font-size:10px">${d.step}</div>
+      <div><div style="font-size:11px;font-weight:600">${d.title}</div><div style="font-size:10px;color:var(--t2)">${d.desc}</div></div>
+    </div>`).join('');
+  document.getElementById('penalty-table').innerHTML=PENALTIES.map(p=>`
+    <div class="row">
+      <div style="flex:1"><div style="font-size:10px;font-weight:500">${p.offense}</div><div style="font-size:9px;color:var(--red)">${p.penalty}</div></div>
+      <div style="font-size:9px;color:var(--t3);text-align:right">Repeat:<br>${p.repeat}</div>
+    </div>`).join('');
+}
+function submitDispute(){toast('⚖','Dispute submitted','Ticket ID: DIS-'+Math.floor(Math.random()*90000+10000)+' · Response within 48hrs. False disputes carry a 50 cr penalty.');}
+
+// ══════════════════════════════════════════════════════════════════
+// WALLET
+// ══════════════════════════════════════════════════════════════════
+function renderWallet(){
+  document.getElementById('earn-guide').innerHTML=EARN_GUIDE.map(e=>`
+    <div class="row fb"><div class="fg"><span>${e.ico}</span><div><div style="font-size:11px;font-weight:500">${e.lbl}</div><div style="font-size:9px;color:var(--t3)">${e.note}</div></div></div><span class="cr-val mono" style="font-size:11px;font-weight:700">${e.rate}</span></div>`).join('');
+  document.getElementById('live-rates').innerHTML=RATES.map(r=>`
+    <div class="row fb"><span style="font-size:11px">${r.skill}</span><div class="fg"><span style="color:${r.col};font-weight:700;font-size:10px">${r.trend}</span><span class="mono" style="font-size:11px;color:${r.col};font-weight:700">${r.rate}cr</span></div></div>`).join('');
+  document.getElementById('tx-hist').innerHTML=(S.transactions.map(t=>`
+    <div class="row fb"><div class="fg"><span style="font-size:14px">${t.ico}</span><div><div style="font-size:10px">${t.lbl}</div><div style="font-size:9px;color:var(--t3)">${t.date}</div></div></div><span class="mono ${t.pos?'up':'dn'}" style="font-size:11px;font-weight:700">${t.cr>0?'+':''}${t.cr}</span></div>`).join(''))||'<div style="color:var(--t3);font-size:11px;padding:12px 0;text-align:center">No transactions yet</div>';
+  renderPkgs('pkg-grid');
+}
+function renderPkgs(targetId){
+  document.getElementById(targetId).innerHTML=PKGS.map((p,i)=>`
+    <div class="pkg${p.hot?' hot':''}" onclick="S.selPkg=${i};document.querySelectorAll('#${targetId} .pkg').forEach((c,j)=>c.classList.toggle('hot',j===${i}))">
+      ${p.hot?'<div class="pkg-hot">Best value</div>':''}
+      <div class="pkg-cr">${p.cr}</div>
+      <div style="font-size:9px;color:var(--t3);margin-bottom:5px">credits</div>
+      <div style="font-size:15px;font-weight:700">${p.price}</div>
+      <div style="font-size:9px;color:var(--t3)">${p.rate}</div>
+    </div>`).join('');
+}
+function openBuyModal(){document.getElementById('buy-modal').classList.add('open');renderPkgs('modal-pkgs');}
+function completePurchase(){
+  const pkg=PKGS[S.selPkg];
+  S.credits+=pkg.cr;S.earnedThisMonth+=pkg.cr;
+  S.transactions.unshift({ico:'◈',lbl:'Bought '+pkg.cr+' credits',date:'Just now',cr:pkg.cr,pos:true});
+  updateSidebar();spawnCrPop('+'+pkg.cr+' cr');
+  document.getElementById('buy-modal').classList.remove('open');
+  renderWallet();renderDashboard();
+  toast('◈','Credits added!',pkg.cr+' credits ($'+(pkg.cr*.1).toFixed(2)+'). Balance: '+S.credits+' cr');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INVENTORY
+// ══════════════════════════════════════════════════════════════════
+function renderInv(){
+  const filt=document.getElementById('inv-filt')?.value||'';
+  let items=filt?S.inventory.filter(i=>i.type===filt):S.inventory;
+  const grid=document.getElementById('inv-grid');const empty=document.getElementById('inv-empty');
+  if(!items.length){grid.style.display='none';empty.style.display='block';return;}
+  grid.style.display='grid';empty.style.display='none';
+  document.getElementById('inv-summary').innerHTML=`<div class="g4">${[
+    {l:'Total items',v:S.inventory.length,ico:'🎒'},
+    {l:'Unused',v:S.inventory.filter(i=>!i.used).length,ico:'✨'},
+    {l:'Used / expired',v:S.inventory.filter(i=>i.used).length,ico:'✓'},
+    {l:'Total value',v:S.inventory.reduce((a,b)=>a+b.cost,0)+' cr',ico:'◈'},
+  ].map(s=>`<div class="stat"><div class="stat-ico" style="background:var(--bg3);font-size:14px">${s.ico}</div><div class="stat-v mono">${s.v}</div><div class="stat-l">${s.l}</div></div>`).join('')}</div>`;
+  grid.innerHTML=items.map(item=>`
+    <div class="inv-card ${item.rarity}${item.used?' used':''}" onclick="openInvItem('${item.id}')">
+      <div class="rarity-lbl ${item.rarity}">${item.rarity}</div>
+      <div style="font-size:28px;margin-bottom:8px">${item.ico}</div>
+      <div style="font-size:12px;font-weight:600;margin-bottom:4px">${item.name}</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.5;margin-bottom:8px">${item.desc.slice(0,70)}...</div>
+      <div style="font-size:9px;color:var(--t3)">📅 ${item.purchasedAt} · ⏱ ${item.expiresAt}</div>
+      ${item.used?'<div style="margin-top:8px;font-size:10px;color:var(--t3)">✓ Used / expired</div>':item.type==='session'?`<button class="btn btn-pri" style="margin-top:8px;padding:4px 10px;font-size:10px;width:100%;justify-content:center" onclick="event.stopPropagation();useInvItem('${item.id}')">Use now</button>`:''}
+    </div>`).join('');
+}
+function openInvItem(id){
+  const item=S.inventory.find(i=>i.id===id);if(!item)return;
+  document.getElementById('inv-item-content').innerHTML=`
+    <div style="font-size:36px;margin-bottom:10px">${item.ico}</div>
+    <div class="rarity-lbl ${item.rarity}" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em">${item.rarity}</div>
+    <div class="modal-title" style="margin:6px 0">${item.name}</div>
+    <p style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:16px">${item.desc}</p>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:12px;margin-bottom:14px">
+      <div class="row fb" style="padding-top:0"><span style="font-size:11px">Purchased</span><span style="font-size:11px;font-weight:500">${item.purchasedAt}</span></div>
+      <div class="row fb"><span style="font-size:11px">Expires</span><span style="font-size:11px;font-weight:500">${item.expiresAt}</span></div>
+      <div class="row fb"><span style="font-size:11px">Cost paid</span><span class="cr-val mono" style="font-size:11px">${item.cost} cr</span></div>
+      <div class="row fb"><span style="font-size:11px">Status</span><span style="font-size:11px;font-weight:600;color:${item.used?'var(--t3)':'var(--green2)'}">${item.used?'Used / Expired':'Active'}</span></div>
+    </div>
+    ${!item.used?`<button class="btn btn-pri btn-full btn-lg" onclick="useInvItem('${item.id}');document.getElementById('inv-item-modal').classList.remove('open')">Use this item →</button>`:'<div style="text-align:center;font-size:11px;color:var(--t3);padding:10px">This item has already been used and cannot be used again.</div>'}
+    <button class="btn btn-ghost btn-full" style="margin-top:7px" onclick="document.getElementById('inv-item-modal').classList.remove('open')">Close</button>`;
+  document.getElementById('inv-item-modal').classList.add('open');
+}
+function useInvItem(id){
+  const item=S.inventory.find(i=>i.id===id);if(!item||item.used){toast('⚠','Already used','This item has been used and cannot be reused.');return;}
+  item.used=true;
+  renderInv();updateSidebar();
+  if(item.type==='session') toast('📅','Session scheduled!','Contact the provider via their listing to set your time slot. Show escrow ID: '+item.escrowId);
+  else toast('✓',item.name+' activated','Enjoy your '+item.type+'!');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// AFFILIATE
+// ══════════════════════════════════════════════════════════════════
+function renderAffiliate(){
+  document.getElementById('aff-code').textContent=S.affiliateCode||randomCode();
+  document.getElementById('aff-referrals').textContent=S.affiliateReferrals;
+  document.getElementById('aff-earned').textContent=S.affiliateEarned;
+  document.getElementById('aff-tiers').innerHTML=[
+    {tier:'Tier 1 — Direct referrals',rate:'10 cr per referral',detail:'When your referral completes their first session',cap:'Max 50 cr per referred user',active:true},
+    {tier:'Tier 2 — Their referrals',rate:'3 cr per referral',detail:'When people your referrals invite complete first session',cap:'Max 15 cr per user · 2-tier cap (no pyramid)',active:S.affiliateReferrals>0},
+  ].map(t=>`
+    <div class="aff-tier ${t.active?'active-tier':''}">
+      <div style="font-size:12px;font-weight:600;margin-bottom:4px">${t.tier}</div>
+      <div class="cr-val" style="font-size:18px;font-weight:700;margin-bottom:4px">${t.rate}</div>
+      <div style="font-size:10px;color:var(--t2);">${t.detail}</div>
+      <div style="font-size:9px;color:var(--t3);margin-top:3px">${t.cap}</div>
+    </div>`).join('');
+  document.getElementById('aff-activity').innerHTML=S.affiliateReferrals>0?[
+    {name:'Sofia M.',joined:'Mar 26',completed:true,cr:10},
+    {name:'Tariq N.',joined:'Mar 28',completed:true,cr:10},
+    {name:'Julia W.',joined:'Apr 1',completed:false,cr:0},
+  ].map(r=>`
+    <div class="row fg"><div class="ava ava-sm" style="background:var(--bg4);color:var(--t2)">${r.name.slice(0,2)}</div><div style="flex:1"><div style="font-size:11px;font-weight:500">${r.name}</div><div style="font-size:9px;color:var(--t3)">Joined ${r.joined} · ${r.completed?'✓ Session completed':'⏳ Awaiting first session'}</div></div><span class="cr-val mono" style="font-size:11px">${r.cr>0?'+'+r.cr+' cr':'Pending'}</span></div>`).join('')
+    :'<div style="color:var(--t3);font-size:11px;padding:10px 0;text-align:center">No referrals yet. Share your code to start earning.</div>';
+}
+function copyRefCode(){navigator.clipboard.writeText(S.affiliateCode).catch(()=>{});toast('📋','Code copied!',S.affiliateCode+' · Share it with friends to earn 10 cr per referral');}
+function shareRefLink(){navigator.clipboard.writeText('https://skillbridge.io/?ref='+S.affiliateCode).catch(()=>{});toast('🔗','Link copied!','https://skillbridge.io/?ref='+S.affiliateCode);}
+
+// ══════════════════════════════════════════════════════════════════
+// TRUST
+// ══════════════════════════════════════════════════════════════════
+function renderTrust(){
+  updateSidebar();
+  document.getElementById('trust-breakdown').innerHTML=[
+    {lbl:'Identity verified',score:S.verifications.phone&&S.verifications.email?30:S.verifications.email?15:0,max:30},
+    {lbl:'Skill verified',score:S.verifications.skills?25:0,max:25},
+    {lbl:'Session reputation',score:S.sessions.filter(s=>s.status==='completed').length*3,max:25,cap:true},
+    {lbl:'No disputes / penalties',score:20,max:20},
+  ].map(b=>`<div style="margin-bottom:7px"><div class="fb" style="font-size:9px;color:var(--t3);margin-bottom:3px"><span>${b.lbl}</span><span>${Math.min(b.score,b.max||999)}/${b.max}</span></div><div class="pbar"><div class="pbar-f" style="width:${Math.min(100,(b.score/(b.max||1))*100)}%;background:var(--gold)"></div></div></div>`).join('');
+
+  document.getElementById('id-verify-layers').innerHTML=[
+    {ico:'📧',lbl:'Email verification',desc:'Confirm your email address',done:S.verifications.email,action:"verifyEmail()"},
+    {ico:'📱',lbl:'Phone verification',desc:'SMS code to your phone number',done:S.verifications.phone,action:"verifyPhone()"},
+    {ico:'🪪',lbl:'Government ID',desc:'Passport or national ID (stored encrypted)',done:S.verifications.id,action:"verifyId()"},
+    {ico:'🎓',lbl:'Skill assessment',desc:'AI-proctored skill test for verified listing rates',done:S.verifications.skills,action:"verifySkill()"},
+  ].map(v=>`
+    <div class="vstep ${v.done?'vdone':''}" onclick="${v.done?'':v.action}">
+      <div class="vstep-ico" style="background:${v.done?'var(--grnbg)':'var(--bg4)'}${v.done?';color:var(--green2)':''}">${v.done?'✓':v.ico}</div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:500">${v.lbl}</div><div style="font-size:10px;color:var(--t3)">${v.desc}</div></div>
+      ${v.done?'<span class="tag tag-teach">Done</span>':'<button class="btn btn-ghost" style="padding:3px 8px;font-size:10px">Verify →</button>'}
+    </div>`).join('');
+
+  document.getElementById('skill-verify').innerHTML=[
+    {skill:'Python',verified:true,rate:'+40%'},
+    {skill:'Data analysis',verified:false,rate:'standard'},
+    {skill:'React',verified:false,rate:'standard'},
+  ].map(s=>`
+    <div class="row fb">
+      <div class="fg"><span>${s.skill}</span>${s.verified?'<span class="tag tag-teach" style="font-size:9px">✓ Verified</span>':''}</div>
+      <div style="text-align:right">
+        <div style="font-size:9px;color:${s.verified?'var(--green2)':'var(--t3)'}">${s.rate} credit rate</div>
+        ${!s.verified?`<button class="btn btn-ghost" style="padding:2px 7px;font-size:9px;margin-top:3px" onclick="verifySkill('${s.skill}')">Take test</button>`:''}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('fraud-signals').innerHTML=[
+    {ico:'✓',lbl:'Device fingerprint',desc:'One account detected on this device',ok:true},
+    {ico:'✓',lbl:'IP consistency',desc:'Normal login pattern',ok:true},
+    {ico:'✓',lbl:'Review authenticity',desc:'No AI-generated review patterns detected',ok:true},
+    {ico:'⚠',lbl:'ID not yet verified',desc:'Unverified accounts have lower trust and earning limits',ok:false},
+  ].map(f=>`<div class="${f.ok?'fraud-ok':'fraud-flag'}"><span style="font-size:14px;flex-shrink:0">${f.ico}</span><div><div style="font-weight:600">${f.lbl}</div><div style="color:${f.ok?'var(--t2)':'var(--red)'}">${f.desc}</div></div></div>`).join('');
+}
+
+function verifyEmail(){S.verifications.email=true;S.trustScore=Math.min(100,S.trustScore+15);renderTrust();updateSidebar();toast('📧','Email verified!','+15 trust score');}
+function verifyPhone(){S.verifications.phone=true;S.trustScore=Math.min(100,S.trustScore+15);renderTrust();updateSidebar();toast('📱','Phone verified!','+15 trust score');}
+function verifyId(){S.verifications.id=true;S.trustScore=Math.min(100,S.trustScore+20);renderTrust();updateSidebar();toast('🪪','ID verified!','+20 trust score · Unlock higher earning limits');}
+function verifySkill(s){S.verifications.skills=true;S.trustScore=Math.min(100,S.trustScore+25);renderTrust();updateSidebar();toast('🎓','Skill verified!',s||'Skill'+' · +25 trust score · Verified badge on all your listings · Higher credit rate unlocked');}
+
+// ══════════════════════════════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════════════════════════════
+function renderAchievements(){
+  const unlocked=ACHIEVEMENTS.filter(a=>a.unlocked).length;
+  document.getElementById('ach-count').textContent=unlocked+'/'+ACHIEVEMENTS.length;
+  document.getElementById('ach-grid').innerHTML=ACHIEVEMENTS.map(a=>`
+    <div class="ach ${a.unlocked?'unlocked':'locked'}" onclick="${a.unlocked?`toast('🏆','${a.name}','You earned this! +${a.cr}cr reward already in your wallet.')`:``}">
+      ${a.new?'<div class="ach-new">NEW!</div>':''}
+      <div style="font-size:26px;margin-bottom:6px">${a.ico}</div>
+      <div style="font-size:10px;font-weight:600;margin-bottom:2px">${a.name}</div>
+      <div style="font-size:9px;color:var(--t3);line-height:1.4;margin-bottom:5px">${a.desc}</div>
+      <div style="font-size:9px;font-weight:700;color:${a.unlocked?'var(--gold)':'var(--t3)'}${a.unlocked?'':''}">${a.unlocked?'✓ Earned':'🔒'} · ${a.cr}cr</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// LEADERBOARD
+// ══════════════════════════════════════════════════════════════════
+function renderLB(){
+  const type=document.getElementById('lb-type').value;
+  let sorted=[...LB_DEMO];
+  if(type.includes('Sessions')) sorted.sort((a,b)=>b.sess-a.sess);
+  else if(type.includes('Trust')) sorted.sort((a,b)=>b.trust-a.trust);
+  else if(type.includes('Streak')) sorted.sort((a,b)=>b.streak-a.streak);
+  else sorted.sort((a,b)=>b.cr-a.cr);
+  const ri=n=>n===1?'🥇':n===2?'🥈':n===3?'🥉':'#'+n;
+  document.getElementById('lb-global').innerHTML=sorted.map((u,i)=>`
+    <div class="row fg">
+      <div style="font-size:${i<3?'16px':'12px'};min-width:24px;color:${i===0?'var(--gold)':i===1?'#A8A8B8':i===2?'#C8884A':'var(--t3)'}">${ri(i+1)}</div>
+      <div class="ava ava-md" style="background:${u.bg};color:${u.fg}">${u.init}</div>
+      <div style="flex:1"><div style="font-size:11px;font-weight:500">${u.name}</div><div style="font-size:9px;color:var(--t3)">${u.loc}</div></div>
+      <div class="cr-val mono" style="font-size:12px;font-weight:700">${type.includes('Session')?u.sess+' sess':type.includes('Trust')?u.trust+'/100':type.includes('Streak')?u.streak+'d':u.cr+' cr'}</div>
+    </div>`).join('');
+  document.getElementById('lb-yours').innerHTML=`
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--terra)">#6</div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:16px">Your global rank</div>
+      <div class="g2" style="gap:8px">
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center"><div class="cr-val" style="font-size:16px">${S.credits}</div><div style="font-size:9px;color:var(--t3)">Credits</div></div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center"><div style="font-size:16px;font-weight:700">${S.sessions.filter(s=>s.status==='completed').length}</div><div style="font-size:9px;color:var(--t3)">Sessions</div></div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--gold)">${S.trustScore}</div><div style="font-size:9px;color:var(--t3)">Trust</div></div>
+        <div style="background:var(--bg3);border-radius:var(--r);padding:10px;text-align:center"><div style="font-size:16px;font-weight:700;color:var(--terra)">${S.streak}🔥</div><div style="font-size:9px;color:var(--t3)">Streak</div></div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SKILL PATHS
+// ══════════════════════════════════════════════════════════════════
+function renderPaths(){
+  document.getElementById('paths-grid').innerHTML=PATHS.map(path=>`
+    <div class="card">
+      <div class="fb" style="margin-bottom:12px">
+        <div><div style="font-size:15px;font-weight:700">${path.ico} ${path.name}</div><div style="font-size:10px;color:var(--t3)">${path.desc}</div></div>
+        <div style="text-align:right"><span class="cr-val" style="font-size:16px;font-weight:700">${path.totalCr}</span><div style="font-size:9px;color:var(--t3)">cr total</div></div>
+      </div>
+      <div class="pbar" style="margin-bottom:5px"><div class="pbar-f" style="width:${path.progress}%;background:var(--terra)"></div></div>
+      <div style="font-size:9px;color:var(--t3);margin-bottom:14px">${path.progress}% complete</div>
+      ${path.steps.map((s,i)=>`
+        <div class="pnode ${s.done?'done':s.current?'current':'locked'}">
+          <div class="pnode-ico" style="background:${s.done?'var(--grnbg)':s.current?'var(--terbg)':'var(--bg5)'}${s.done?';color:var(--green2)':s.current?';color:var(--terra)':''}">${s.done?'✓':s.current?'▶':'🔒'}</div>
+          <div style="flex:1"><div style="font-size:11px;font-weight:500">${s.l}</div>${s.current?'<div style="font-size:9px;color:var(--terra)">Current milestone</div>':''}</div>
+          <span class="cr-val" style="font-size:10px">+${s.cr}cr</span>
+        </div>
+        ${i<path.steps.length-1?`<div class="pconn ${s.done?'done':''}"></div>`:''}`).join('')}
+      <button class="btn btn-pri btn-full" style="margin-top:12px" onclick="toast('✓','Path session booked!','Your next session will count towards this path milestone.')">Book next milestone →</button>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TUTORIAL
+// ══════════════════════════════════════════════════════════════════
+function renderTutorial(){
+  const tdata={
+    start:[
+      {n:1,t:'Create an account',d:'Register with your real name, email, and phone. One account per person — device fingerprinting prevents abuse.'},
+      {n:2,t:'Complete verification',d:'Verify email + phone to start. Add government ID and skill tests to unlock higher earning rates and trust score.'},
+      {n:3,t:'List your first service',d:'Go to My Listings → Create Listing. Describe exactly what you deliver. AI quality-checks your listing before approval.'},
+      {n:4,t:'Set your price',d:'AI suggests a price based on skill level and live market demand. You can adjust. Verified skills command 30–80% more.'},
+    ],
+    earn:[
+      {n:1,t:'Someone books your service',d:'Credits go into escrow immediately. You see the booking in Sessions.'},
+      {n:2,t:'Deliver the service',d:'Conduct the session. The AI session assistant can take notes and generate a recap.'},
+      {n:3,t:'Both parties confirm',d:'Once both confirm in the Escrow page, credits are released to you minus 5% platform fee (burned).'},
+      {n:4,t:'Daily & streak bonuses',d:'Log in and teach daily. Streaks earn bonus credits. Daily challenges pay 3–15 cr each.'},
+    ],
+    spend:[
+      {n:1,t:'Browse the marketplace',d:'Find services that match what you want to learn. Filter by category, price, and rating.'},
+      {n:2,t:'Book with escrow protection',d:'Credits go into escrow. You pay only when both parties confirm completion. No risk.'},
+      {n:3,t:'Session is added to inventory',d:'Your purchased session goes into Inventory. Use it to schedule with the provider.'},
+      {n:4,t:'Review & rate',d:'After completion, honest review earns you +2 cr and helps the community. Fake reviews carry penalties.'},
+    ],
+    safety:[
+      {n:1,t:'Escrow protects your credits',d:'You never lose credits to a no-show or non-delivery. Credits are held until you confirm.'},
+      {n:2,t:'Dispute resolution',d:'If something goes wrong, file a dispute within 72hrs. Evidence-based. Decision within 48hrs.'},
+      {n:3,t:'Trust score matters',d:'Higher trust = higher daily limits, featured listings, and better matches. Build it with completed sessions.'},
+      {n:4,t:'Anti-fraud systems',d:'AI monitors for fake reviews, account duplicates, and collusion. Detected bad actors lose credits and are banned.'},
+    ],
+    legal:[
+      {n:1,t:'Tax responsibility',d:'Income from SkillBridge services is taxable in most jurisdictions. Keep records of your earnings. Consult a local tax professional.'},
+      {n:2,t:'Professional services',d:'If you offer legal, medical, or financial advice, you must upload valid professional certifications. Uncertified professional advice can create liability.'},
+      {n:3,t:'Credits are not investments',d:'SkillBridge credits cannot be redeemed for cash. They have a fixed USD purchase price ($0.10) but no guaranteed value. They are not securities.'},
+      {n:4,t:'GDPR & privacy',d:'All personal data is handled per GDPR / applicable local law. You can request deletion of your account and data at any time.'},
+    ],
+  };
+  Object.entries(tdata).forEach(([key,steps])=>{
+    document.getElementById('tut-'+key).innerHTML=steps.map(s=>`
+      <div class="tut-step">
+        <div class="tut-num">${s.n}</div>
+        <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">${s.t}</div><div style="font-size:11px;color:var(--t2);line-height:1.6">${s.d}</div></div>
+      </div>`).join('');
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SYSTEM ARCHITECTURE
+// ══════════════════════════════════════════════════════════════════
+function renderArchitecture(){
+  const left=[
+    {title:'🏗 Backend Architecture',content:[
+      '<strong>Core:</strong> Node.js + Go microservices. Node for real-time (sessions, notifications), Go for high-throughput (matching engine, escrow).',
+      '<strong>Database:</strong> PostgreSQL (users, listings, transactions), Redis (sessions, rate limiting, daily limits), Elasticsearch (search + skill matching).',
+      '<strong>Queue:</strong> Kafka for event streaming — every session completion, review, and credit transfer emits events for fraud detection and analytics.',
+      '<strong>CDN:</strong> Cloudflare for video delivery and DDoS protection.',
+    ]},
+    {title:'🤖 AI Components',content:[
+      '<strong>Matching engine:</strong> Sentence transformers on skill descriptions + collaborative filtering on session history. Re-runs every 15min.',
+      '<strong>Fraud detection:</strong> Real-time graph analysis on review patterns (clustering coefficient detects collusion rings). Trained on synthetic fraud data.',
+      '<strong>Listing quality:</strong> GPT-4 classifier checks listings for vagueness, fake claims, and prohibited content before approval.',
+      '<strong>Price suggestion:</strong> Demand-weighted regression on category, level, and time-of-day. Updates hourly.',
+      '<strong>Dispute analysis:</strong> NLP on submitted evidence. Flags key inconsistencies for human moderators.',
+    ]},
+    {title:'🔒 Anti-Fraud Architecture',content:[
+      '<strong>Multiple accounts:</strong> Device fingerprinting (Canvas, WebGL, fonts), IP geolocation clustering, phone number uniqueness enforcement.',
+      '<strong>Review fraud:</strong> Reviews only enabled after on-platform session completion with escrow release. AI detects generated text patterns. Graph analysis spots coordinated boosting.',
+      '<strong>Credit farming:</strong> 500 cr/day earning cap. Cooldown between same-user sessions. Velocity checks on account age vs earnings.',
+      '<strong>Fake listings:</strong> AI quality gate. Manual review for flagged listings. Skill verification before expert-rate listings go live.',
+      '<strong>Collusion:</strong> Graph database tracks who reviews whom. Unusual reciprocal review patterns trigger freeze + human review.',
+    ]},
+    {title:'💰 Credit Economy Design',content:[
+      '<strong>Anti-inflation:</strong> 5% of every transaction is burned (not recycled). Total credit supply is contractionary over time, counteracted only by new user bonuses and challenge rewards.',
+      '<strong>Dynamic pricing:</strong> Base rate × demand multiplier (0.7–2.0) × quality multiplier (0.8–1.5 based on trust score). Updated hourly.',
+      '<strong>No cash-out:</strong> Credits cannot be redeemed for real money. This keeps the platform out of financial regulation territory and prevents speculative farming.',
+      '<strong>Earning limits:</strong> 500 cr/day hard cap. First 30 days: 200 cr/day cap for new accounts (anti-farming). Resets at midnight UTC.',
+    ]},
+  ];
+  const right=[
+    {title:'📈 Growth & Network Effects',content:[
+      '<strong>Cold start:</strong> Launch in 1 city, 1 niche (e.g. tech skills in Accra). Seed with 20 vetted providers. All new users see real listings immediately.',
+      '<strong>Supply-side first:</strong> Recruit providers before buyers. 1 provider serves multiple buyers. Imbalance is asymmetric — fewer providers needed to appear liquid.',
+      '<strong>Viral loop:</strong> Every session ends with "Share what you learned" → social post with referral code baked in. Provider celebrates milestone → shares profile.',
+      '<strong>Retention:</strong> Streak system + daily challenges create daily habit. Achievement milestones every 5 sessions prevent drop-off.',
+      '<strong>Expansion:</strong> Once one niche is liquid (>50 providers, <30min avg wait), expand to adjacent category in same city. Then same category in new city.',
+    ]},
+    {title:'⚖ Why Previous Platforms Failed',content:[
+      '<strong>Time banks:</strong> Failed on trust (no reputation system), failed on liquidity (had to find exact swaps), and failed on quality (all hours treated equal regardless of skill). SkillBridge fixes all three.',
+      '<strong>Fiverr / Upwork:</strong> USD payments excluded billions without cards or in high-cost economies. SkillBridge uses credits — accessible anywhere.',
+      '<strong>Taskrabbit / freelance platforms:</strong> Race to bottom on price. SkillBridge dynamic pricing rewards quality — higher ratings → higher rate.',
+      '<strong>Key differentiator:</strong> Escrow + trust system + non-cash credits + AI matching creates a platform where it\'s easier to deliver real value than to exploit it.',
+    ]},
+    {title:'🌐 Blockchain: No, and Here\'s Why',content:[
+      '<strong>Not using blockchain:</strong> Blockchain would add latency, cost, and complexity with no meaningful benefit for this use case.',
+      '<strong>Why not:</strong> Credits cannot be redeemed for cash — so immutability is less important. Disputes require human judgment — smart contracts cannot handle "this session was low quality."',
+      '<strong>What we do instead:</strong> Append-only audit log in PostgreSQL with cryptographic hashing of each transaction batch. Tamper-evident, auditable, infinitely cheaper than on-chain.',
+      '<strong>Transparency:</strong> Monthly public reports of total credits issued, burned, and in circulation. Open API for balance checks.',
+    ]},
+    {title:'💸 Unit Economics',content:[
+      '<strong>CAC target:</strong> $2–4 via referral (most signups from word-of-mouth). Paid CAC (social ads) $8–15.',
+      '<strong>LTV:</strong> Average user: 2 sessions/month × $0.50 fee = $1/mo. Power user: 8 sessions × $0.50 = $4/mo. Target LTV/CAC ratio: 3:1 at scale.',
+      '<strong>Break-even:</strong> ~50,000 monthly active users at average 3 sessions/month × 5% fee × avg session value $4 = ~$30k MRR. With credit purchase revenue, break-even at ~20k MAU.',
+      '<strong>Profitable unit at scale:</strong> Marginal cost of a session ≈ $0.02 (infra). Revenue ≈ $0.50. 25× gross margin at scale.',
+    ]},
+  ];
+  document.getElementById('arch-left').innerHTML=left.map(s=>`
+    <div class="arch-layer"><div class="arch-layer-title"><span>${s.title}</span></div><div style="display:flex;flex-direction:column;gap:6px">${s.content.map(c=>`<div style="font-size:11px;color:var(--t2);line-height:1.6;padding-left:10px;border-left:2px solid var(--border)">${c}</div>`).join('')}</div></div>`).join('');
+  document.getElementById('arch-right').innerHTML=right.map(s=>`
+    <div class="arch-layer"><div class="arch-layer-title"><span>${s.title}</span></div><div style="display:flex;flex-direction:column;gap:6px">${s.content.map(c=>`<div style="font-size:11px;color:var(--t2);line-height:1.6;padding-left:10px;border-left:2px solid var(--border)">${c}</div>`).join('')}</div></div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════════════════════════════
+function renderProfile(){
+  document.getElementById('prof-card').innerHTML=`
+    <div class="sec-lbl">My profile</div>
+    <div class="fg" style="align-items:flex-start;margin-bottom:14px">
+      <div class="ava" style="width:50px;height:50px;font-size:16px;background:var(--terbg);color:var(--terra)">${document.getElementById('sb-av').textContent}</div>
+      <div><div style="font-size:15px;font-weight:600">${document.getElementById('sb-un').textContent}</div><div style="font-size:10px;color:var(--t3)">Trust score: ${S.trustScore}/100 · ${S.sessions.filter(s=>s.status==='completed').length} sessions completed</div></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      ${S.verifications.email?'<span class="tag tag-teach">📧 Email</span>':''}
+      ${S.verifications.phone?'<span class="tag tag-teach">📱 Phone</span>':''}
+      ${S.verifications.id?'<span class="tag tag-teach">🪪 ID</span>':''}
+      ${S.verifications.skills?'<span class="tag tag-teach">🎓 Skills</span>':''}
+    </div>
+    <button class="btn btn-ghost btn-full" onclick="nav('trust')">Complete verification →</button>`;
+  document.getElementById('rev-list').innerHTML=S.isDemo?[
+    {n:'Priya S.',r:5,t:'"Exceptional Python explanations. Broke down complex concepts naturally."',d:'2 days ago'},
+    {n:'Sofia M.',r:5,t:'"Best exchange I\'ve had. Practical, clear, and incredibly patient."',d:'1 week ago'},
+  ].map(r=>`<div style="background:var(--bg3);border-radius:var(--rl);padding:12px;margin-bottom:8px;border:1px solid var(--border)"><div class="fb" style="margin-bottom:6px"><div style="font-size:11px;font-weight:500">${r.n}</div><div style="color:var(--gold);font-size:10px">${'★'.repeat(r.r)}</div><div style="font-size:9px;color:var(--t3)">${r.d}</div></div><p style="font-size:11px;font-style:italic;color:var(--t2)">${r.t}</p></div>`).join(''):'<div style="color:var(--t3);font-size:11px;padding:10px 0;text-align:center">No reviews yet. Complete sessions to earn reviews.</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// DAILY CHALLENGE
+// ══════════════════════════════════════════════════════════════════
+function showDailyChal(){
+  document.getElementById('daily-list').innerHTML=CHALLENGES.map(c=>`
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:var(--bg3);border:1px solid ${c.done?'var(--grnbd)':'var(--border)'};border-radius:var(--r);margin-bottom:7px">
+      <div style="font-size:20px">${c.ico}</div>
+      <div style="flex:1"><div style="font-size:11px;font-weight:600;${c.done?'text-decoration:line-through;color:var(--t3)':''}">${c.title}</div><div style="font-size:10px;color:var(--t3)">${c.desc}</div></div>
+      <div style="text-align:right"><div class="cr-val mono" style="font-size:12px;font-weight:700">+${c.cr}cr</div><div style="font-size:9px;color:${c.done?'var(--green2)':'var(--t3)'}">${c.done?'✓ Done':'Pending'}</div></div>
+    </div>`).join('');
+  document.getElementById('daily-modal').classList.add('open');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════════════════════════
+function showNotifs(){
+  document.getElementById('notif-list').innerHTML=S.notifs.length?S.notifs.map(n=>`
+    <div class="row"><span style="font-size:16px;flex-shrink:0">${n.ico}</span><div style="flex:1"><div style="font-size:11px;font-weight:500">${n.title}</div><div style="font-size:10px;color:var(--t3)">${n.body}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">${n.time}</div></div></div>`).join('')
+    :'<div style="color:var(--t3);font-size:11px;padding:16px 0;text-align:center">No notifications</div>';
+  document.getElementById('notif-modal').classList.add('open');
+  document.getElementById('ndot').style.display='none';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════════════
+let toastT;
+function toast(ico,title,body){
+  clearTimeout(toastT);
+  document.getElementById('toast-t').innerHTML='<span>'+ico+'</span> '+title;
+  document.getElementById('toast-b').textContent=body;
+  const el=document.getElementById('toast-el');el.classList.add('show');
+  toastT=setTimeout(()=>el.classList.remove('show'),4500);
+}
+function spawnCrPop(text){
+  const el=document.createElement('div');el.className='crpop';el.textContent=text;
+  el.style.left=(window.innerWidth*.55+Math.random()*80-40)+'px';
+  el.style.top=(window.innerHeight*.4)+'px';
+  document.body.appendChild(el);setTimeout(()=>el.remove(),1500);
+}
+function startNotifLoop(){
+  const msgs=[
+    ['🌍','Marketplace active','6 new services listed in the last hour'],
+    ['🔔','Booking request','Someone wants to book your listing'],
+    ['⭐','Review reminder','Leave a review for your last session — earn +2 cr'],
+    ['🔥','Streak at risk','You haven\'t taught today — keep your streak alive!'],
+    ['📊','Your listing is trending','Python session has 3 views today'],
+  ];
+  let i=0;
+  setTimeout(()=>{setInterval(()=>{if(S.uid)toast(...msgs[i++%msgs.length]);},16000);},10000);
+}
+</script>
+</body>
+</html>
